@@ -75,9 +75,16 @@ class MobilController extends Controller
     }
 
     public function update(Request $request, Mobil $mobil)
-    {
-        //
-    }
+{
+    $mobil->update([
+        'kode_mobil'=>$request->kode_mobil,
+        'merk'=>$request->merk,
+    ]);
+
+    return redirect()
+            ->route('mobil.index')
+            ->with('success','Data mobil berhasil diubah.');
+}
 
     public function destroy(Mobil $mobil)
     {
