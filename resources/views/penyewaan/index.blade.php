@@ -1,24 +1,28 @@
 @extends('layouts.app')
 
-@section('title', 'Data Pelanggan')
+@section('title','Penyewaan')
 
 @section('content')
 
 <div class="flex justify-between items-center mb-8">
 
     <div>
+
         <h1 class="text-3xl font-bold text-slate-800 dark:text-white">
-            Data Pelanggan
+            Data Penyewaan
         </h1>
 
         <p class="mt-2 text-slate-500 dark:text-slate-400">
-            Daftar seluruh pelanggan.
+            Daftar transaksi penyewaan mobil.
         </p>
+
     </div>
 
-    <a href="{{ route('pelanggan.create') }}"
+    <a href="{{ route('penyewaan.create') }}"
        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow">
-        + Tambah Pelanggan
+
+        + Tambah Penyewaan
+
     </a>
 
 </div>
@@ -26,7 +30,9 @@
 @if(session('success'))
 
 <div class="mb-6 bg-green-100 border border-green-300 text-green-700 px-5 py-4 rounded-xl">
+
     {{ session('success') }}
+
 </div>
 
 @endif
@@ -38,90 +44,109 @@
         <thead class="bg-slate-100 dark:bg-slate-700">
 
             <tr>
+
                 <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Kode
+                    Pelanggan
                 </th>
 
                 <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Nama
+                    Mobil
                 </th>
 
                 <th class="p-4 text-left text-slate-700 dark:text-white">
-                    NIK
+                    Tanggal
                 </th>
 
                 <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Telepon
+                    Total
                 </th>
 
                 <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Email
-                </th>
-
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    SIM
+                    Status
                 </th>
 
                 <th class="p-4 text-center text-slate-700 dark:text-white">
                     Aksi
                 </th>
+
             </tr>
 
         </thead>
 
         <tbody>
 
-        @forelse($pelanggans as $pelanggan)
+            @forelse($penyewaans as $item)
 
             <tr class="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition">
 
                 <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->kode_pelanggan }}
+
+                    {{ $item->pelanggan->nama }}
+
+                </td>
+
+                <td class="p-4 text-slate-700 dark:text-slate-200">
+
+                    {{ $item->mobil->merk }}
+                    {{ $item->mobil->tipe }}
+
+                </td>
+
+                <td class="p-4 text-slate-700 dark:text-slate-200">
+
+                    {{ $item->tanggal_sewa }}
+
+                </td>
+
+                <td class="p-4 text-slate-700 dark:text-slate-200">
+
+                    Rp {{ number_format($item->total_bayar,0,',','.') }}
+
                 </td>
 
                 <td class="p-4">
-                    <div class="font-semibold text-slate-800 dark:text-white">
-                        {{ $pelanggan->nama }}
-                    </div>
 
-                    <div class="text-sm text-slate-500 dark:text-slate-400">
-                        {{ $pelanggan->alamat }}
-                    </div>
-                </td>
+                    @if($item->status=='Booking')
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->nik }}
-                </td>
+                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">
+                            Booking
+                        </span>
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->telepon }}
-                </td>
+                    @elseif($item->status=='Berjalan')
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->email ?? '-' }}
-                </td>
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+                            Berjalan
+                        </span>
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->sim ?? '-' }}
+                    @else
+
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                            Selesai
+                        </span>
+
+                    @endif
+
                 </td>
 
                 <td class="p-4 text-center">
 
                     <div class="flex justify-center gap-2">
 
-                        <a href="{{ route('pelanggan.edit', $pelanggan->id) }}"
+                        <a href="{{ route('penyewaan.edit',$item) }}"
                            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+
                             Edit
+
                         </a>
 
-                        <form action="{{ route('pelanggan.destroy', $pelanggan->id) }}"
+                        <form action="{{ route('penyewaan.destroy',$item) }}"
                               method="POST">
 
                             @csrf
                             @method('DELETE')
 
                             <button
-                                onclick="return confirm('Yakin ingin menghapus pelanggan ini?')"
+                                onclick="return confirm('Hapus transaksi ini?')"
                                 class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
 
                                 Hapus
@@ -136,30 +161,30 @@
 
             </tr>
 
-        @empty
+            @empty
 
             <tr>
 
-                <td colspan="7"
+                <td colspan="6"
                     class="text-center py-10 text-slate-500 dark:text-slate-400">
 
-                    Belum ada data pelanggan.
+                    Belum ada transaksi.
 
                 </td>
 
             </tr>
 
-        @endforelse
+            @endforelse
 
         </tbody>
 
     </table>
 
-    @if($pelanggans->count())
+    @if($penyewaans->count())
 
     <div class="p-6 border-t border-slate-200 dark:border-slate-700">
 
-        {{ $pelanggans->links() }}
+        {{ $penyewaans->links() }}
 
     </div>
 

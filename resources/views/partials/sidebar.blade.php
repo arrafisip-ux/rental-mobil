@@ -3,7 +3,7 @@ bg-white dark:bg-slate-800
 border-r border-slate-200 dark:border-slate-700
 shadow-sm transition-all duration-300">
 
-    <!-- Logo -->
+    {{-- Logo --}}
     <div class="p-6 border-b border-slate-200 dark:border-slate-700">
 
         <h1 class="text-2xl font-bold text-slate-800 dark:text-white">
@@ -16,9 +16,10 @@ shadow-sm transition-all duration-300">
 
     </div>
 
-    <!-- Menu -->
+    {{-- Menu --}}
     <nav class="p-4 space-y-2">
 
+        {{-- Dashboard --}}
         <a href="{{ route('dashboard') }}"
            class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
            {{ request()->routeIs('dashboard')
@@ -30,6 +31,7 @@ shadow-sm transition-all duration-300">
 
         </a>
 
+        {{-- Mobil --}}
         <a href="{{ route('mobil.index') }}"
            class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
            {{ request()->routeIs('mobil.*')
@@ -41,42 +43,60 @@ shadow-sm transition-all duration-300">
 
         </a>
 
+        {{-- Pelanggan --}}
         <a href="{{ route('pelanggan.index') }}"
-class="block rounded-xl p-3 transition
-{{ request()->routeIs('pelanggan.*')
-? 'bg-blue-600 text-white shadow'
-: 'text-slate-700 dark:text-white hover:bg-blue-600 hover:text-white' }}">
+           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+           {{ request()->routeIs('pelanggan.*')
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
-👤 Pelanggan
+            <span>👤</span>
+            <span>Pelanggan</span>
 
-</a>
+        </a>
 
-        <a href="#"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white transition-all duration-200">
+        {{-- Penyewaan --}}
+        <a href="{{ route('penyewaan.index') }}"
+           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+           {{ request()->routeIs('penyewaan.*')
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
             <span>📋</span>
             <span>Penyewaan</span>
 
         </a>
 
-        <a href="#"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white transition-all duration-200">
+        {{-- Tarif --}}
+        <a href="{{ route('tarif.index') }}"
+           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+           {{ request()->routeIs('tarif.*')
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
             <span>💰</span>
             <span>Tarif</span>
 
         </a>
 
-        <a href="#"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white transition-all duration-200">
+        {{-- Riwayat Oli --}}
+        <a href="{{ route('riwayat-oli.index') }}"
+           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+           {{ request()->routeIs('riwayat-oli.*')
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
             <span>🔧</span>
             <span>Riwayat Oli</span>
 
         </a>
 
-        <a href="#"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white transition-all duration-200">
+        {{-- Laporan --}}
+        <a href="{{ route('laporan.index') }}"
+           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+           {{ request()->routeIs('laporan.*')
+                ? 'bg-blue-600 text-white shadow-md'
+                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
             <span>📈</span>
             <span>Laporan</span>

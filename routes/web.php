@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MobilController;
+use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\PenyewaanController;
 
 
 Route::get('/', function () {
@@ -14,7 +16,10 @@ Route::middleware(['auth'])->group(function () {
         ->name('dashboard');
 
     Route::resource('mobil', MobilController::class);
-    Route::resource('pelanggan', App\Http\Controllers\PelangganController::class);
+
+    Route::resource('pelanggan', PelangganController::class);
+
+    Route::resource('penyewaan', PenyewaanController::class);
 
 });
 

@@ -10,58 +10,41 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('penyewaans', function (Blueprint $table) {
+    {
+        Schema::create('penyewaans', function (Blueprint $table) {
 
-        $table->id();
+            $table->id();
 
-        $table->string('no_transaksi')->unique();
+            $table->foreignId('pelanggan_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
 
-        $table->foreignId('pelanggan_id')
-            ->constrained('pelanggans')
-            ->cascadeOnDelete();
+            $table->foreignId('mobil_id')
+                  ->constrained()
+                  ->cascadeOnDelete();
 
-        $table->foreignId('mobil_id')
-            ->constrained('mobils')
-            ->cascadeOnDelete();
+            $table->date('tanggal_sewa');
 
-        $table->date('tanggal_pinjam');
+            $table->date('tanggal_kembali');
 
-        $table->date('tanggal_kembali');
+            $table->integer('lama_sewa');
 
-        $table->date('tanggal_kembali_aktual')->nullable();
+            $table->decimal('harga_per_hari', 12, 2);
 
-        $table->enum('tujuan', [
-            'Dalam Kota',
-            'Luar Kota'
-        ]);
+            $table->decimal('total_bayar', 12, 2);
 
-        $table->integer('estimasi_km');
+            $table->enum('status', [
+                'Booking',
+                'Berjalan',
+                'Selesai',
+                'Batal'
+            ])->default('Booking');
 
-        $table->integer('km_awal');
+            $table->text('catatan')->nullable();
 
-        $table->integer('km_akhir')->nullable();
-
-        $table->integer('total_km')->default(0);
-
-        $table->decimal('biaya_sewa', 12, 2)->default(0);
-
-        $table->decimal('biaya_jarak', 12, 2)->default(0);
-
-        $table->decimal('denda', 12, 2)->default(0);
-
-        $table->decimal('total_bayar', 12, 2)->default(0);
-
-        $table->enum('status', [
-            'Aktif',
-            'Selesai',
-            'Terlambat'
-        ])->default('Aktif');
-
-        $table->timestamps();
-
-    });
-}
+            $table->timestamps();
+        });
+    }
 
     /**
      * Reverse the migrations.

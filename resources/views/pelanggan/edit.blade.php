@@ -4,17 +4,24 @@
 
 @section('content')
 
-<h1 class="text-3xl font-bold mb-8 dark:text-white">
-    Edit Pelanggan
-</h1>
+<div class="max-w-5xl mx-auto">
 
-<form action="{{ route('pelanggan.update',$pelanggan) }}" method="POST">
+    <h1 class="text-3xl font-bold text-slate-800 dark:text-white mb-8">
+        Edit Pelanggan
+    </h1>
 
-    @csrf
-    @method('PUT')
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
 
-    @include('pelanggan._form')
+        <form action="{{ route('pelanggan.update',$pelanggan) }}" method="POST">
 
-</form>
+            @method('PUT')
+
+            @include('pelanggan._form')
+
+        </form>
+
+    </div>
+
+</div>
 
 @endsection

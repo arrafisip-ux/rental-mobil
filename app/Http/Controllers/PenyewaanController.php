@@ -3,63 +3,88 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penyewaan;
+use App\Models\Mobil;
+use App\Models\Pelanggan;
 use Illuminate\Http\Request;
 
 class PenyewaanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $penyewaans = Penyewaan::with(['mobil','pelanggan'])
+                        ->latest()
+                        ->paginate(10);
+
+        return view('penyewaan.index', compact('penyewaans'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $mobils = Mobil::where('status','Ready')->get();
+        $pelanggans = Pelanggan::all();
+
+        return view('penyewaan.create', compact('mobils','pelanggans'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'pelanggan_id'=>'required',
+            'mobil_id'=>'required',
+            'tanggal_sewa'=>'required|date',
+            'tanggal_kembali'=>'required|date',
+            'lama_sewa'=>'required|integer',
+            'harga_per_hari'=>'required|numeric',
+            'total_bayar'=>'required|numeric',
+            'catatan'=>'nullable'
+        ]);
+
+        $data['status']='Booking';
+
+        Penyewaan::create($data);
+
+        Mobil::find($request->mobil_id)
+            ->update([
+                'status'=>'Dipakai'
+            ]);
+
+        return redirect()->route('penyewaan.index')
+                ->with('success','Booking berhasil dibuat.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Penyewaan $penyewaan)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Penyewaan $penyewaan)
     {
-        //
+        $mobils = Mobil::all();
+        $pelanggans = Pelanggan::all();
+
+        return view('penyewaan.edit',
+            compact('penyewaan','mobils','pelanggans'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Penyewaan $penyewaan)
     {
-        //
+        $data = $request->validate([
+            'pelanggan_id'=>'required',
+            'mobil_id'=>'required',
+            'tanggal_sewa'=>'required',
+            'tanggal_kembali'=>'required',
+            'lama_sewa'=>'required',
+            'harga_per_hari'=>'required',
+            'total_bayar'=>'required',
+            'status'=>'required',
+            'catatan'=>'nullable'
+        ]);
+
+        $penyewaan->update($data);
+
+        return redirect()->route('penyewaan.index')
+                ->with('success','Data berhasil diupdate.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Penyewaan $penyewaan)
     {
-        //
+        $penyewaan->delete();
+
+        return back()->with('success','Data berhasil dihapus.');
     }
 }
