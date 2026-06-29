@@ -12,7 +12,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::view('/dashboard', 'dashboard.index')
+    Route::view('/dashboard','dashboard.index')
         ->name('dashboard');
 
     Route::resource('mobil', MobilController::class);
@@ -21,6 +21,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('penyewaan', PenyewaanController::class);
 
-});
+    Route::view('/tarif','tarif.index')
+        ->name('tarif.index');
 
+    Route::view('/riwayat-oli','riwayat-oli.index')
+        ->name('riwayat-oli.index');
+
+    Route::view('/laporan','laporan.index')
+        ->name('laporan.index');
+
+});
 require __DIR__.'/auth.php';
