@@ -1,47 +1,72 @@
-<aside class="w-72 bg-slate-900 text-white min-h-screen">
+<aside class="w-72 bg-white dark:bg-slate-800 border-r border-slate-200 dark:border-slate-700 transition">
 
-    <div class="p-6 border-b border-slate-700">
+<div class="p-6 border-b border-slate-200 dark:border-slate-700">
 
-        <h1 class="text-2xl font-bold">
-            🚗 Rental Mobil
-        </h1>
+<h1 class="text-2xl font-bold text-slate-800 dark:text-white">
 
-        <p class="text-sm text-slate-400">
-            Admin Panel
-        </p>
+🚗 Rental Mobil
 
-    </div>
+</h1>
 
-    <nav class="p-5 space-y-2">
+<p class="text-slate-500 dark:text-slate-400">
 
-        <a href="{{ route('dashboard') }}" class="block p-3 rounded-xl hover:bg-slate-800">
-            📊 Dashboard
-        </a>
+Admin Panel
 
-        <a href="{{ route('mobil.index') }}" class="block p-3 rounded-xl hover:bg-slate-800">
-            🚗 Data Mobil
-        </a>
+</p>
 
-        <a href="#" class="block p-3 rounded-xl hover:bg-slate-800">
-            👤 Pelanggan
-        </a>
+</div>
 
-        <a href="#" class="block p-3 rounded-xl hover:bg-slate-800">
-            📋 Penyewaan
-        </a>
+<nav class="p-5 space-y-2">
 
-        <a href="#" class="block p-3 rounded-xl hover:bg-slate-800">
-            💰 Tarif
-        </a>
+<a href="{{ route('dashboard') }}"
+class="block rounded-xl p-3 text-slate-700 dark:text-white hover:bg-blue-600 hover:text-white transition">
 
-        <a href="#" class="block p-3 rounded-xl hover:bg-slate-800">
-            🔧 Riwayat Oli
-        </a>
+📊 Dashboard
 
-        <a href="#" class="block p-3 rounded-xl hover:bg-slate-800">
-            📈 Laporan
-        </a>
+</a>
 
-    </nav>
+<a href="{{ route('mobil.index') }}"
+class="block rounded-xl p-3 text-slate-700 dark:text-white hover:bg-blue-600 hover:text-white transition">
+
+🚗 Data Mobil
+
+</a>
+
+<a href="#"
+class="block rounded-xl p-3 text-slate-700 dark:text-white hover:bg-blue-600 hover:text-white transition">
+
+👤 Pelanggan
+
+</a>
+
+<a href="#"
+class="block rounded-xl p-3 text-slate-700 dark:text-white hover:bg-blue-600 hover:text-white transition">
+
+📋 Penyewaan
+
+</a>
+
+<a href="#"
+class="block rounded-xl p-3 text-slate-700 dark:text-white hover:bg-blue-600 hover:text-white transition">
+
+💰 Tarif
+
+</a>
+
+<a href="#"
+class="block rounded-xl p-3 text-slate-700 dark:text-white hover:bg-blue-600 hover:text-white transition">
+
+🔧 Riwayat Oli
+
+</a>
+
+<a href="#"
+class="block rounded-xl p-3 text-slate-700 dark:text-white hover:bg-blue-600 hover:text-white transition">
+
+📈 Laporan
+
+</a>
+
+</nav>
 
 </aside>

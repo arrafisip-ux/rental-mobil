@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mobil;
+use Illuminate\Http\Request;
 
 class MobilController extends Controller
 {
@@ -12,4 +13,8 @@ class MobilController extends Controller
 
         return view('mobil.index', compact('mobils'));
     }
+    public function create()
+{
+    return view('mobil.create');
+}
 }

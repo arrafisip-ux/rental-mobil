@@ -1,35 +1,42 @@
-<header class="bg-white dark:bg-slate-800 shadow px-8 py-5 flex justify-between items-center">
+<header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm px-8 py-5 flex justify-between items-center">
 
-    <div>
+<h2 class="text-2xl font-bold text-slate-800 dark:text-white">
 
-        <h2 class="text-2xl font-bold text-slate-700 dark:text-white">
+Dashboard
 
-            Dashboard
+</h2>
 
-        </h2>
+<div class="flex items-center gap-4">
 
-    </div>
+<button
+@click="darkMode=!darkMode"
+class="bg-slate-200 dark:bg-slate-700 px-4 py-2 rounded-xl">
 
-    <div class="flex items-center gap-4">
+<span x-show="!darkMode">🌙</span>
 
-        <span class="text-slate-600 dark:text-white">
+<span x-show="darkMode">☀️</span>
 
-            {{ Auth::user()->name }}
+</button>
 
-        </span>
+<span class="text-slate-700 dark:text-white">
 
-        <form method="POST" action="{{ route('logout') }}">
+{{ Auth::user()->name }}
 
-            @csrf
+</span>
 
-            <button class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+<form method="POST"
+action="{{ route('logout') }}">
 
-                Logout
+@csrf
 
-            </button>
+<button class="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl text-white">
 
-        </form>
+Logout
 
-    </div>
+</button>
+
+</form>
+
+</div>
 
 </header>

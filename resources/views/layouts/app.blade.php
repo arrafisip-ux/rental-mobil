@@ -1,20 +1,25 @@
 <!DOCTYPE html>
-<html lang="id" x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
-      x-init="$watch('darkMode', value => {
+<html lang="id"
+      x-data="{ darkMode: localStorage.getItem('darkMode') === 'true' }"
+      x-init="
+        document.documentElement.classList.toggle('dark', darkMode);
+
+        $watch('darkMode', value => {
             localStorage.setItem('darkMode', value);
             document.documentElement.classList.toggle('dark', value);
-      });
-      document.documentElement.classList.toggle('dark', darkMode);">
+        });
+">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@yield('title', 'Sistem Informasi Rental Mobil')</title>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>@yield('title','Sistem Informasi Rental Mobil')</title>
 
     @vite(['resources/css/app.css','resources/js/app.js'])
-
-   
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -29,23 +34,28 @@
 
 </head>
 
-<body class="bg-slate-100 dark:bg-slate-900">
+<body class="bg-slate-100 dark:bg-slate-900 transition duration-300">
 
 <div class="flex min-h-screen">
 
-   @include('partials.sidebar')
+    @include('partials.sidebar')
 
-<div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col">
 
-    @include('partials.navbar')
+        @include('partials.navbar')
 
-    <main class="p-6">
-        @yield('content')
-    </main>
+        <main class="flex-1 p-8">
 
-</div>
+            @yield('content')
+
+        </main>
+
+        @include('partials.footer')
+
+    </div>
 
 </div>
 
 </body>
+
 </html>
