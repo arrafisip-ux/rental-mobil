@@ -12,25 +12,17 @@ return new class extends Migration
     public function up(): void
 {
     Schema::create('pelanggans', function (Blueprint $table) {
-
         $table->id();
 
-        $table->string('nik')->unique();
-
-        $table->string('nama_lengkap');
-
-        $table->string('no_hp');
-
-        $table->string('no_darurat');
-
-        $table->string('email')->nullable();
-
+        $table->string('kode_pelanggan')->unique();
+        $table->string('nama');
+        $table->string('nik',20)->unique();
+        $table->string('telepon',20);
         $table->text('alamat');
-
-        $table->string('foto_ktp');
+        $table->string('email')->nullable();
+        $table->string('sim')->nullable();
 
         $table->timestamps();
-
     });
 }
 

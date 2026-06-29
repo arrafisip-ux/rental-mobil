@@ -21,48 +21,35 @@ class MobilController extends Controller
 
     public function store(Request $request)
 {
-    $request->validate([
-        'kode_mobil'=>'required|unique:mobils',
-        'merk'=>'required',
-        'tipe'=>'required',
-        'tahun'=>'required',
-        'warna'=>'required',
-        'plat_nomor'=>'required|unique:mobils',
-        'kapasitas'=>'required',
-        'transmisi'=>'required',
-        'bahan_bakar'=>'required',
-        'kilometer'=>'required',
-        'nomor_stnk'=>'required',
-        'masa_berlaku_stnk'=>'required',
-        'foto'=>'nullable|image|max:2048'
+    $validated = $request->validate([
+        'kode_mobil' => 'required|unique:mobils',
+        'merk' => 'required',
+        'tipe' => 'required',
+        'tahun' => 'required',
+        'warna' => 'required',
+        'plat_nomor' => 'required|unique:mobils',
+        'kapasitas' => 'required',
+        'transmisi' => 'required',
+        'bahan_bakar' => 'required',
+        'kilometer' => 'required',
+        'nomor_stnk' => 'required',
+        'masa_berlaku_stnk' => 'required',
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
     ]);
 
-    $foto = null;
-
-    if($request->hasFile('foto')){
-        $foto = $request->file('foto')->store('mobil','public');
+    if ($request->hasFile('foto')) {
+        $validated['foto'] = $request
+            ->file('foto')
+            ->store('mobil', 'public');
     }
 
-    Mobil::create([
-        'kode_mobil'=>$request->kode_mobil,
-        'merk'=>$request->merk,
-        'tipe'=>$request->tipe,
-        'tahun'=>$request->tahun,
-        'warna'=>$request->warna,
-        'plat_nomor'=>$request->plat_nomor,
-        'kapasitas'=>$request->kapasitas,
-        'transmisi'=>$request->transmisi,
-        'bahan_bakar'=>$request->bahan_bakar,
-        'kilometer'=>$request->kilometer,
-        'nomor_stnk'=>$request->nomor_stnk,
-        'masa_berlaku_stnk'=>$request->masa_berlaku_stnk,
-        'foto'=>$foto,
-        'status'=>'Ready'
-    ]);
+    $validated['status'] = 'Ready';
+
+    Mobil::create($validated);
 
     return redirect()
-            ->route('mobil.index')
-            ->with('success','Mobil berhasil ditambahkan.');
+        ->route('mobil.index')
+        ->with('success', 'Mobil berhasil ditambahkan.');
 }
 
     public function show(Mobil $mobil)
@@ -87,7 +74,15 @@ class MobilController extends Controller
 }
 
     public function destroy(Mobil $mobil)
-    {
-        //
+{
+    if ($mobil->foto && file_exists(public_path('storage/'.$mobil->foto))) {
+        unlink(public_path('storage/'.$mobil->foto));
     }
+
+    $mobil->delete();
+
+    return redirect()
+        ->route('mobil.index')
+        ->with('success','Data mobil berhasil dihapus.');
+}
 }
