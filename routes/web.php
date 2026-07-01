@@ -1,10 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MobilController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\PenyewaanController;
-
+use App\Http\Controllers\TarifController;
+use App\Http\Controllers\RiwayatOliController;
+use App\Http\Controllers\LaporanController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -12,7 +16,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::view('/dashboard','dashboard.index')
+    Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
     Route::resource('mobil', MobilController::class);
@@ -21,14 +25,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('penyewaan', PenyewaanController::class);
 
-    Route::view('/tarif','tarif.index')
-        ->name('tarif.index');
+    Route::resource('tarif', TarifController::class);
 
-    Route::view('/riwayat-oli','riwayat-oli.index')
-        ->name('riwayat-oli.index');
+    Route::resource('riwayat-oli', RiwayatOliController::class);
 
-    Route::view('/laporan','laporan.index')
-        ->name('laporan.index');
+    Route::resource('laporan', LaporanController::class);
 
 });
+
 require __DIR__.'/auth.php';

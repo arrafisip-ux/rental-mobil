@@ -1,163 +1,193 @@
 @extends('layouts.app')
 
-@section('title', 'Data Pelanggan')
+@section('title','Data Pelanggan')
 
 @section('content')
 
-<div class="flex justify-between items-center mb-8">
+<div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
 
     <div>
+
         <h1 class="text-3xl font-bold text-slate-800 dark:text-white">
             Data Pelanggan
         </h1>
 
         <p class="mt-2 text-slate-500 dark:text-slate-400">
-            Daftar seluruh pelanggan.
+            Daftar seluruh pelanggan rental mobil.
         </p>
+
     </div>
 
     <a href="{{ route('pelanggan.create') }}"
-       class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow">
+        class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl shadow transition">
+
         + Tambah Pelanggan
+
     </a>
 
 </div>
 
 @if(session('success'))
 
-<div class="mb-6 bg-green-100 border border-green-300 text-green-700 px-5 py-4 rounded-xl">
+<div class="mb-6 rounded-xl border border-green-300 bg-green-100 px-5 py-4 text-green-700 dark:bg-green-900/40 dark:border-green-700 dark:text-green-300">
+
     {{ session('success') }}
+
 </div>
 
 @endif
 
 <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg overflow-hidden">
 
-    <table class="w-full">
+    <div class="overflow-x-auto">
 
-        <thead class="bg-slate-100 dark:bg-slate-700">
+        <table class="min-w-full whitespace-nowrap">
 
-            <tr>
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Kode
-                </th>
+            <thead class="bg-slate-100 dark:bg-slate-700">
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Nama
-                </th>
+                <tr>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    NIK
-                </th>
+                    <th class="px-5 py-4 text-left font-semibold text-slate-700 dark:text-white">
+                        Kode
+                    </th>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Telepon
-                </th>
+                    <th class="px-5 py-4 text-left font-semibold text-slate-700 dark:text-white">
+                        Nama
+                    </th>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Email
-                </th>
+                    <th class="px-5 py-4 text-left font-semibold text-slate-700 dark:text-white">
+                        NIK
+                    </th>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    SIM
-                </th>
+                    <th class="px-5 py-4 text-left font-semibold text-slate-700 dark:text-white">
+                        No HP
+                    </th>
 
-                <th class="p-4 text-center text-slate-700 dark:text-white">
-                    Aksi
-                </th>
-            </tr>
+                    <th class="px-5 py-4 text-left font-semibold text-slate-700 dark:text-white">
+                        Email
+                    </th>
 
-        </thead>
+                    <th class="px-5 py-4 text-left font-semibold text-slate-700 dark:text-white">
+                        Nomor SIM
+                    </th>
 
-        <tbody>
+                    <th class="px-5 py-4 text-center font-semibold text-slate-700 dark:text-white">
+                        Aksi
+                    </th>
 
-        @forelse($pelanggans as $pelanggan)
+                </tr>
 
-            <tr class="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+            </thead>
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->kode_pelanggan }}
-                </td>
+            <tbody>
 
-                <td class="p-4">
-                    <div class="font-semibold text-slate-800 dark:text-white">
-                        {{ $pelanggan->nama }}
-                    </div>
+                @forelse($pelanggans as $pelanggan)
 
-                    <div class="text-sm text-slate-500 dark:text-slate-400">
-                        {{ $pelanggan->alamat }}
-                    </div>
-                </td>
+                <tr class="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition">
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->nik }}
-                </td>
+                    <td class="px-5 py-4 text-slate-700 dark:text-slate-200 font-medium">
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->telepon }}
-                </td>
+                        {{ $pelanggan->kode_pelanggan }}
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->email ?? '-' }}
-                </td>
+                    </td>
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
-                    {{ $pelanggan->sim ?? '-' }}
-                </td>
+                    <td class="px-5 py-4">
 
-                <td class="p-4 text-center">
+                        <div class="font-semibold text-slate-800 dark:text-white">
 
-                    <div class="flex justify-center gap-2">
+                            {{ $pelanggan->nama }}
 
-                        <a href="{{ route('pelanggan.edit', $pelanggan->id) }}"
-                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
-                            Edit
-                        </a>
+                        </div>
 
-                        <form action="{{ route('pelanggan.destroy', $pelanggan->id) }}"
-                              method="POST">
+                        <div class="text-sm text-slate-500 dark:text-slate-400 mt-1">
 
-                            @csrf
-                            @method('DELETE')
+                            {{ $pelanggan->alamat }}
 
-                            <button
-                                onclick="return confirm('Yakin ingin menghapus pelanggan ini?')"
-                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                        </div>
 
-                                Hapus
+                    </td>
 
-                            </button>
+                    <td class="px-5 py-4 text-slate-700 dark:text-slate-200">
 
-                        </form>
+                        {{ $pelanggan->nik }}
 
-                    </div>
+                    </td>
 
-                </td>
+                    <td class="px-5 py-4 text-slate-700 dark:text-slate-200">
 
-            </tr>
+                        {{ $pelanggan->telepon }}
 
-        @empty
+                    </td>
 
-            <tr>
+                    <td class="px-5 py-4 text-slate-700 dark:text-slate-200">
 
-                <td colspan="7"
-                    class="text-center py-10 text-slate-500 dark:text-slate-400">
+                        {{ $pelanggan->email ?: '-' }}
 
-                    Belum ada data pelanggan.
+                    </td>
 
-                </td>
+                    <td class="px-5 py-4 text-slate-700 dark:text-slate-200">
 
-            </tr>
+                        {{ $pelanggan->sim ?: '-' }}
 
-        @endforelse
+                    </td>
 
-        </tbody>
+                    <td class="px-5 py-4">
 
-    </table>
+                        <div class="flex justify-center gap-2">
+
+                            <a href="{{ route('pelanggan.edit',$pelanggan) }}"
+                                class="px-4 py-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white transition">
+
+                                Edit
+
+                            </a>
+
+                            <form action="{{ route('pelanggan.destroy',$pelanggan) }}"
+                                method="POST">
+
+                                @csrf
+                                @method('DELETE')
+
+                                <button
+                                    onclick="return confirm('Yakin ingin menghapus pelanggan ini?')"
+                                    class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white transition">
+
+                                    Hapus
+
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                @empty
+
+                <tr>
+
+                    <td colspan="7"
+                        class="py-12 text-center text-slate-500 dark:text-slate-400">
+
+                        Belum ada data pelanggan.
+
+                    </td>
+
+                </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
 
     @if($pelanggans->count())
 
-    <div class="p-6 border-t border-slate-200 dark:border-slate-700">
+    <div class="border-t border-slate-200 dark:border-slate-700 px-6 py-5">
 
         {{ $pelanggans->links() }}
 

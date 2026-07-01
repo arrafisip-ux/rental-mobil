@@ -7,13 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Pelanggan extends Model
 {
     protected $fillable = [
+
         'kode_pelanggan',
-        'nama',
+
         'nik',
+
+        'nama',
+
         'telepon',
+
+        'telepon_darurat',
+
         'alamat',
-        'email',
-        'sim',
+
+        'nomor_sim',
+
+        'masa_berlaku_sim',
+
     ];
 
     public function penyewaans()

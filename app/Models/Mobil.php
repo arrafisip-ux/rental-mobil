@@ -24,4 +24,9 @@ class Mobil extends Model
     {
         return $this->hasMany(Penyewaan::class);
     }
+
+    public function riwayatOlis()
+{
+    return $this->hasMany(RiwayatOli::class);
+}
 }

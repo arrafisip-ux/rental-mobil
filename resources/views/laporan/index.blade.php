@@ -4,14 +4,14 @@
 
 @section('content')
 
-<div>
+<div class="bg-white dark:bg-slate-800 rounded-xl shadow p-6">
 
-    <h1 class="text-3xl font-bold text-slate-800 dark:text-white">
+    <h1 class="text-3xl font-bold mb-2">
         Laporan
     </h1>
 
-    <p class="mt-2 text-slate-500 dark:text-slate-400">
-        Halaman laporan masih dalam proses pengembangan.
+    <p class="text-slate-500">
+        Halaman laporan masih dalam pengembangan.
     </p>
 
 </div>

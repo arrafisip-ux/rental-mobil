@@ -26,8 +26,8 @@ class TarifController extends Controller
             'tarif_km_dalam_kota' => 'required|numeric',
             'tarif_km_luar_kota' => 'required|numeric',
             'denda_per_hari' => 'required|numeric',
-            'interval_ganti_oli' => 'required|numeric',
-            'notifikasi_ganti_oli' => 'required|numeric',
+            'interval_ganti_oli' => 'required|integer',
+            'notifikasi_ganti_oli' => 'required|integer',
         ]);
 
         Tarif::create($data);
@@ -54,15 +54,15 @@ class TarifController extends Controller
             'tarif_km_dalam_kota' => 'required|numeric',
             'tarif_km_luar_kota' => 'required|numeric',
             'denda_per_hari' => 'required|numeric',
-            'interval_ganti_oli' => 'required|numeric',
-            'notifikasi_ganti_oli' => 'required|numeric',
+            'interval_ganti_oli' => 'required|integer',
+            'notifikasi_ganti_oli' => 'required|integer',
         ]);
 
         $tarif->update($data);
 
         return redirect()
             ->route('tarif.index')
-            ->with('success', 'Tarif berhasil diupdate.');
+            ->with('success', 'Tarif berhasil diperbarui.');
     }
 
     public function destroy(Tarif $tarif)

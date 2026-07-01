@@ -7,23 +7,53 @@ use Illuminate\Database\Eloquent\Model;
 class Penyewaan extends Model
 {
     protected $fillable = [
-        'no_transaksi',
+        'kode_sewa',
+
         'pelanggan_id',
         'mobil_id',
+
         'tanggal_pinjam',
+        'tanggal_kembali_rencana',
         'tanggal_kembali',
-        'tanggal_kembali_aktual',
-        'tujuan',
+
+        'paket',
+        'jenis_perjalanan',
+
         'estimasi_km',
-        'km_awal',
-        'km_akhir',
-        'total_km',
-        'biaya_sewa',
-        'biaya_jarak',
+
+        'harga_sewa',
+        'biaya_luar_kota',
+        'overtime',
         'denda',
         'total_bayar',
+
+        'cek_ktp',
+        'cek_sim',
+        'cek_id_karyawan',
+        'cek_slip_gaji',
+        'cek_tempat_usaha',
+
         'status',
+        'catatan',
     ];
+
+    protected $casts = [
+        'tanggal_pinjam'            => 'datetime',
+        'tanggal_kembali_rencana'   => 'datetime',
+        'tanggal_kembali'           => 'datetime',
+
+        'cek_ktp'            => 'boolean',
+        'cek_sim'            => 'boolean',
+        'cek_id_karyawan'    => 'boolean',
+        'cek_slip_gaji'      => 'boolean',
+        'cek_tempat_usaha'   => 'boolean',
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relasi
+    |--------------------------------------------------------------------------
+    */
 
     public function pelanggan()
     {

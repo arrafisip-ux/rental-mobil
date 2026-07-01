@@ -10,21 +10,31 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-{
-    Schema::create('pelanggans', function (Blueprint $table) {
-        $table->id();
+    {
+        Schema::create('pelanggans', function (Blueprint $table) {
 
-        $table->string('kode_pelanggan')->unique();
-        $table->string('nama');
-        $table->string('nik',20)->unique();
-        $table->string('telepon',20);
-        $table->text('alamat');
-        $table->string('email')->nullable();
-        $table->string('sim')->nullable();
+            $table->id();
 
-        $table->timestamps();
-    });
-}
+            $table->string('kode_pelanggan')->unique();
+
+            $table->string('nik',20)->unique();
+
+            $table->string('nama');
+
+            $table->string('telepon',20);
+
+            $table->string('telepon_darurat',20);
+
+            $table->text('alamat');
+
+            $table->string('nomor_sim')->unique();
+
+            $table->date('masa_berlaku_sim');
+
+            $table->timestamps();
+
+        });
+    }
 
     /**
      * Reverse the migrations.

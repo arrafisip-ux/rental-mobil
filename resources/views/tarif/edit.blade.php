@@ -1,34 +1,30 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Tarif')
+@section('title','Edit Tarif')
 
 @section('content')
 
 <div class="max-w-5xl mx-auto">
 
-    <div class="flex justify-between items-center mb-8">
+    <div class="mb-8">
 
-        <div>
+        <h1 class="text-3xl font-bold text-slate-800 dark:text-white">
+            Edit Tarif
+        </h1>
 
-            <h1 class="text-3xl font-bold text-white">
-                Edit Tarif
-            </h1>
-
-            <p class="text-slate-400 mt-2">
-                Ubah data tarif rental mobil.
-            </p>
-
-        </div>
+        <p class="mt-2 text-slate-600 dark:text-slate-400">
+            Ubah data tarif rental mobil.
+        </p>
 
     </div>
 
-    @if ($errors->any())
+    @if($errors->any())
 
-    <div class="mb-6 bg-red-100 border border-red-300 text-red-700 px-5 py-4 rounded-xl">
+    <div class="mb-6 bg-red-100 border border-red-300 text-red-700 rounded-xl p-5">
 
         <ul class="list-disc ml-5">
 
-            @foreach ($errors->all() as $error)
+            @foreach($errors->all() as $error)
 
                 <li>{{ $error }}</li>
 
@@ -40,7 +36,7 @@
 
     @endif
 
-    <div class="bg-slate-800 rounded-2xl shadow-lg p-8">
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-8">
 
         <form action="{{ route('tarif.update', $tarif) }}" method="POST">
 
