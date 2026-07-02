@@ -9,6 +9,7 @@ use App\Http\Controllers\PenyewaanController;
 use App\Http\Controllers\TarifController;
 use App\Http\Controllers\RiwayatOliController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\PerawatanController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -39,6 +40,7 @@ Route::put(
     Route::resource('riwayat-oli', RiwayatOliController::class);
 
     Route::resource('laporan', LaporanController::class);
+    Route::resource('perawatan', PerawatanController::class);
 
 });
 

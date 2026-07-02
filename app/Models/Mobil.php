@@ -32,6 +32,10 @@ class Mobil extends Model
     {
         return $this->hasMany(RiwayatOli::class);
     }
+    public function perawatans()
+{
+    return $this->hasMany(Perawatan::class);
+}
 
     // Relasi tarif berdasarkan tipe mobil
     public function tarif()

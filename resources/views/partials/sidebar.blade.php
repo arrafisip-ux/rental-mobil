@@ -16,92 +16,156 @@ shadow-sm transition-all duration-300">
 
     </div>
 
-    {{-- Menu --}}
-    <nav class="p-4 space-y-2">
+    <nav class="p-4 space-y-6">
 
-        {{-- Dashboard --}}
-        <a href="{{ route('dashboard') }}"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
-           {{ request()->routeIs('dashboard')
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+        {{-- DASHBOARD --}}
+        <div>
 
-            <span>📊</span>
-            <span>Dashboard</span>
+            <p class="px-4 mb-2 text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                Dashboard
+            </p>
 
-        </a>
+            <a href="{{ route('dashboard') }}"
+               class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+               {{ request()->routeIs('dashboard')
+                    ? 'bg-blue-600 text-white shadow-md'
+                    : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
-        {{-- Mobil --}}
-        <a href="{{ route('mobil.index') }}"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
-           {{ request()->routeIs('mobil.*')
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+                <span>📊</span>
+                <span>Dashboard</span>
 
-            <span>🚗</span>
-            <span>Data Mobil</span>
+            </a>
 
-        </a>
+        </div>
 
-        {{-- Pelanggan --}}
-        <a href="{{ route('pelanggan.index') }}"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
-           {{ request()->routeIs('pelanggan.*')
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+        {{-- MASTER DATA --}}
+        <div>
 
-            <span>👤</span>
-            <span>Pelanggan</span>
+            <p class="px-4 mb-2 text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                Master Data
+            </p>
 
-        </a>
+            <div class="space-y-2">
 
-        {{-- Penyewaan --}}
-        <a href="{{ route('penyewaan.index') }}"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
-           {{ request()->routeIs('penyewaan.*')
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+                <a href="{{ route('mobil.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+                    {{ request()->routeIs('mobil.*')
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
-            <span>📋</span>
-            <span>Penyewaan</span>
+                    <span>🚗</span>
+                    <span>Data Mobil</span>
 
-        </a>
+                </a>
 
-        {{-- Tarif --}}
-        <a href="{{ route('tarif.index') }}"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
-           {{ request()->routeIs('tarif.*')
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+                <a href="{{ route('pelanggan.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+                    {{ request()->routeIs('pelanggan.*')
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
-            <span>💰</span>
-            <span>Tarif</span>
+                    <span>👤</span>
+                    <span>Pelanggan</span>
 
-        </a>
+                </a>
 
-        {{-- Riwayat Oli --}}
-        <a href="{{ route('riwayat-oli.index') }}"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
-           {{ request()->routeIs('riwayat-oli.*')
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+                <a href="{{ route('tarif.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+                    {{ request()->routeIs('tarif.*')
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
 
-            <span>🔧</span>
-            <span>Riwayat Oli</span>
+                    <span>💰</span>
+                    <span>Tarif</span>
 
-        </a>
+                </a>
 
-        {{-- Laporan --}}
-        <a href="{{ route('laporan.index') }}"
-           class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
-           {{ request()->routeIs('laporan.*')
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+            </div>
 
-            <span>📈</span>
-            <span>Laporan</span>
+        </div>
 
-        </a>
+        {{-- TRANSAKSI --}}
+        <div>
+
+            <p class="px-4 mb-2 text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                Transaksi
+            </p>
+
+            <div class="space-y-2">
+
+                <a href="{{ route('penyewaan.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+                    {{ request()->routeIs('penyewaan.*')
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+
+                    <span>📋</span>
+                    <span>Penyewaan</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {{-- OPERASIONAL --}}
+        <div>
+
+            <p class="px-4 mb-2 text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                Operasional
+            </p>
+
+            <div class="space-y-2">
+
+                <a href="{{ route('perawatan.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+                    {{ request()->routeIs('perawatan.*')
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+
+                    <span>🛠️</span>
+                    <span>Perawatan Kendaraan</span>
+
+                </a>
+
+                <a href="{{ route('riwayat-oli.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+                    {{ request()->routeIs('riwayat-oli.*')
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+
+                    <span>🛢️</span>
+                    <span>Riwayat Oli</span>
+
+                </a>
+
+            </div>
+
+        </div>
+
+        {{-- LAPORAN --}}
+        <div>
+
+            <p class="px-4 mb-2 text-xs uppercase tracking-wider text-slate-400 font-semibold">
+                Laporan
+            </p>
+
+            <div class="space-y-2">
+
+                <a href="{{ route('laporan.index') }}"
+                    class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
+                    {{ request()->routeIs('laporan.*')
+                        ? 'bg-blue-600 text-white shadow-md'
+                        : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
+
+                    <span>📈</span>
+                    <span>Laporan</span>
+
+                </a>
+
+            </div>
+
+        </div>
 
     </nav>
 
