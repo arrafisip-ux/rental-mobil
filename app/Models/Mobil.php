@@ -13,11 +13,14 @@ class Mobil extends Model
         'plat_nomor',
         'tahun',
         'warna',
+        'kapasitas',
         'transmisi',
         'bahan_bakar',
         'kilometer',
-        'status',
+        'nomor_stnk',
+        'masa_berlaku_stnk',
         'foto',
+        'status',
     ];
 
     public function penyewaans()
@@ -26,7 +29,13 @@ class Mobil extends Model
     }
 
     public function riwayatOlis()
-{
-    return $this->hasMany(RiwayatOli::class);
-}
+    {
+        return $this->hasMany(RiwayatOli::class);
+    }
+
+    // Relasi tarif berdasarkan tipe mobil
+    public function tarif()
+    {
+        return $this->hasOne(Tarif::class, 'jenis_mobil', 'tipe');
+    }
 }

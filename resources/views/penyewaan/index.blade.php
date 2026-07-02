@@ -45,29 +45,19 @@
 
             <tr>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Pelanggan
-                </th>
+                <th class="p-4 text-left">No Transaksi</th>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Mobil
-                </th>
+                <th class="p-4 text-left">Pelanggan</th>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Tanggal
-                </th>
+                <th class="p-4 text-left">Mobil</th>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Total
-                </th>
+                <th class="p-4 text-left">Tanggal Pinjam</th>
 
-                <th class="p-4 text-left text-slate-700 dark:text-white">
-                    Status
-                </th>
+                <th class="p-4 text-left">Total</th>
 
-                <th class="p-4 text-center text-slate-700 dark:text-white">
-                    Aksi
-                </th>
+                <th class="p-4 text-left">Status</th>
+
+                <th class="p-4 text-center">Aksi</th>
 
             </tr>
 
@@ -75,106 +65,140 @@
 
         <tbody>
 
-            @forelse($penyewaans as $item)
+        @forelse($penyewaans as $item)
 
-            <tr class="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition">
+        <tr class="border-t border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700">
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
+            <td class="p-4">
 
-                    {{ $item->pelanggan->nama }}
+                {{ $item->no_transaksi }}
 
-                </td>
+            </td>
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
+            <td class="p-4">
 
-                    {{ $item->mobil->merk }}
-                    {{ $item->mobil->tipe }}
+                {{ $item->pelanggan->nama }}
 
-                </td>
+            </td>
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
+            <td class="p-4">
 
-                    {{ $item->tanggal_sewa }}
+                {{ $item->mobil->merk }}
 
-                </td>
+                {{ $item->mobil->tipe }}
 
-                <td class="p-4 text-slate-700 dark:text-slate-200">
+            </td>
 
-                    Rp {{ number_format($item->total_bayar,0,',','.') }}
+            <td class="p-4">
 
-                </td>
+                {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y H:i') }}
 
-                <td class="p-4">
+            </td>
 
-                    @if($item->status=='Booking')
+            <td class="p-4">
 
-                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">
-                            Booking
-                        </span>
+                Rp {{ number_format($item->total_bayar,0,',','.') }}
 
-                    @elseif($item->status=='Berjalan')
+            </td>
 
-                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-                            Berjalan
-                        </span>
+            <td class="p-4">
 
-                    @else
+                @if($item->status=='Booking')
 
-                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
-                            Selesai
-                        </span>
+                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+
+                        Booking
+
+                    </span>
+
+                @elseif($item->status=='Berjalan')
+
+                    <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+
+                        Berjalan
+
+                    </span>
+
+                @elseif($item->status=='Selesai')
+
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+
+                        Selesai
+
+                    </span>
+
+                @else
+
+                    <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+
+                        Batal
+
+                    </span>
+
+                @endif
+
+            </td>
+
+            <td class="p-4">
+
+                <div class="flex flex-wrap justify-center gap-2">
+
+                    @if($item->status=='Berjalan')
+
+                    <a
+                        href="{{ route('penyewaan.pengembalian',$item) }}"
+                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+
+                        Pengembalian
+
+                    </a>
 
                     @endif
 
-                </td>
+                    <a
+                        href="{{ route('penyewaan.edit',$item) }}"
+                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
 
-                <td class="p-4 text-center">
+                        Edit
 
-                    <div class="flex justify-center gap-2">
+                    </a>
 
-                        <a href="{{ route('penyewaan.edit',$item) }}"
-                           class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+                    <form
+                        action="{{ route('penyewaan.destroy',$item) }}"
+                        method="POST">
 
-                            Edit
+                        @csrf
+                        @method('DELETE')
 
-                        </a>
+                        <button
+                            onclick="return confirm('Hapus transaksi ini?')"
+                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
 
-                        <form action="{{ route('penyewaan.destroy',$item) }}"
-                              method="POST">
+                            Hapus
 
-                            @csrf
-                            @method('DELETE')
+                        </button>
 
-                            <button
-                                onclick="return confirm('Hapus transaksi ini?')"
-                                class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg">
+                    </form>
 
-                                Hapus
+                </div>
 
-                            </button>
+            </td>
 
-                        </form>
+        </tr>
 
-                    </div>
+        @empty
 
-                </td>
+        <tr>
 
-            </tr>
+            <td colspan="7" class="text-center py-10 text-slate-500">
 
-            @empty
+                Belum ada transaksi penyewaan.
 
-            <tr>
+            </td>
 
-                <td colspan="6"
-                    class="text-center py-10 text-slate-500 dark:text-slate-400">
+        </tr>
 
-                    Belum ada transaksi.
-
-                </td>
-
-            </tr>
-
-            @endforelse
+        @endforelse
 
         </tbody>
 
@@ -182,7 +206,7 @@
 
     @if($penyewaans->count())
 
-    <div class="p-6 border-t border-slate-200 dark:border-slate-700">
+    <div class="p-6">
 
         {{ $penyewaans->links() }}
 

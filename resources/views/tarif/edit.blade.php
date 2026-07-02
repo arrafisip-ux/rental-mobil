@@ -1,38 +1,42 @@
 @extends('layouts.app')
 
-@section('title','Edit Tarif')
+@section('title', 'Edit Tarif')
 
 @section('content')
 
-<div class="max-w-5xl mx-auto">
+<div class="max-w-6xl mx-auto">
 
-    <div class="mb-8">
+    <div class="flex justify-between items-center mb-8">
 
-        <h1 class="text-3xl font-bold text-slate-800 dark:text-white">
-            Edit Tarif
-        </h1>
+        <div>
 
-        <p class="mt-2 text-slate-600 dark:text-slate-400">
-            Ubah data tarif rental mobil.
-        </p>
+            <h1 class="text-3xl font-bold text-slate-800 dark:text-white">
+                Edit Tarif
+            </h1>
 
-    </div>
+            <p class="mt-2 text-slate-500 dark:text-slate-400">
+                Perbarui tarif kendaraan rental.
+            </p>
 
-    @if($errors->any())
-
-    <div class="mb-6 bg-red-100 border border-red-300 text-red-700 rounded-xl p-5">
-
-        <ul class="list-disc ml-5">
-
-            @foreach($errors->all() as $error)
-
-                <li>{{ $error }}</li>
-
-            @endforeach
-
-        </ul>
+        </div>
 
     </div>
+
+    @if ($errors->any())
+
+        <div class="mb-6 bg-red-100 dark:bg-red-900 border border-red-300 dark:border-red-700 text-red-700 dark:text-red-200 px-5 py-4 rounded-xl">
+
+            <ul class="list-disc ml-5">
+
+                @foreach ($errors->all() as $error)
+
+                    <li>{{ $error }}</li>
+
+                @endforeach
+
+            </ul>
+
+        </div>
 
     @endif
 

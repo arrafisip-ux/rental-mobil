@@ -6,35 +6,41 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-{
-    Schema::create('tarifs', function (Blueprint $table) {
+    {
+        Schema::create('tarifs', function (Blueprint $table) {
 
-        $table->id();
+            $table->id();
 
-        $table->decimal('harga_per_hari', 12, 2);
+            $table->foreignId('mobil_id')
+                ->constrained()
+                ->cascadeOnDelete()
+                ->unique();
 
-        $table->decimal('tarif_km_dalam_kota', 12, 2);
+            $table->integer('harga_6_jam');
 
-        $table->decimal('tarif_km_luar_kota', 12, 2);
+            $table->integer('harga_12_jam');
 
-        $table->decimal('denda_per_hari', 12, 2);
+            $table->integer('harga_24_jam');
 
-        $table->integer('interval_ganti_oli')->default(5000);
+            $table->integer('overtime_per_jam')->default(0);
 
-        $table->integer('notifikasi_ganti_oli')->default(500);
+            $table->integer('tambahan_100km')->default(50000);
 
-        $table->timestamps();
+            $table->integer('tambahan_200km')->default(100000);
 
-    });
-}
+            $table->integer('tambahan_350km')->default(150000);
 
-    /**
-     * Reverse the migrations.
-     */
+            $table->integer('denda_per_hari')->default(300000);
+
+            $table->integer('interval_ganti_oli')->default(10000);
+
+            $table->integer('notifikasi_ganti_oli')->default(500);
+
+            $table->timestamps();
+        });
+    }
+
     public function down(): void
     {
         Schema::dropIfExists('tarifs');

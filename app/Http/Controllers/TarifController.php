@@ -3,72 +3,94 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tarif;
+use App\Models\Mobil;
 use Illuminate\Http\Request;
 
 class TarifController extends Controller
 {
     public function index()
     {
-        $tarifs = Tarif::latest()->paginate(10);
+        $tarifs = Tarif::with('mobil')->latest()->paginate(10);
 
         return view('tarif.index', compact('tarifs'));
     }
 
     public function create()
     {
-        return view('tarif.create');
+        $mobils = Mobil::whereDoesntHave('tarif')
+                    ->orderBy('merk')
+                    ->get();
+
+        return view('tarif.create', compact('mobils'));
     }
 
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'harga_per_hari' => 'required|numeric',
-            'tarif_km_dalam_kota' => 'required|numeric',
-            'tarif_km_luar_kota' => 'required|numeric',
-            'denda_per_hari' => 'required|numeric',
-            'interval_ganti_oli' => 'required|integer',
-            'notifikasi_ganti_oli' => 'required|integer',
+        $request->validate([
+            'mobil_id'=>'required|exists:mobils,id',
+
+            'harga_6_jam'=>'required|numeric',
+            'harga_12_jam'=>'required|numeric',
+            'harga_24_jam'=>'required|numeric',
+
+            'overtime_per_jam'=>'required|numeric',
+
+            'tambahan_100km'=>'required|numeric',
+            'tambahan_200km'=>'required|numeric',
+            'tambahan_350km'=>'required|numeric',
+
+            'denda_per_hari'=>'required|numeric',
+
+            'interval_ganti_oli'=>'required|numeric',
+            'notifikasi_ganti_oli'=>'required|numeric',
         ]);
 
-        Tarif::create($data);
+        Tarif::create($request->all());
 
         return redirect()
             ->route('tarif.index')
-            ->with('success', 'Tarif berhasil ditambahkan.');
-    }
-
-    public function show(Tarif $tarif)
-    {
-        //
+            ->with('success','Tarif berhasil ditambahkan.');
     }
 
     public function edit(Tarif $tarif)
     {
-        return view('tarif.edit', compact('tarif'));
+        $mobils = Mobil::orderBy('merk')->get();
+
+        return view('tarif.edit', compact('tarif','mobils'));
     }
 
     public function update(Request $request, Tarif $tarif)
     {
-        $data = $request->validate([
-            'harga_per_hari' => 'required|numeric',
-            'tarif_km_dalam_kota' => 'required|numeric',
-            'tarif_km_luar_kota' => 'required|numeric',
-            'denda_per_hari' => 'required|numeric',
-            'interval_ganti_oli' => 'required|integer',
-            'notifikasi_ganti_oli' => 'required|integer',
+        $request->validate([
+            'mobil_id'=>'required',
+
+            'harga_6_jam'=>'required|numeric',
+            'harga_12_jam'=>'required|numeric',
+            'harga_24_jam'=>'required|numeric',
+
+            'overtime_per_jam'=>'required|numeric',
+
+            'tambahan_100km'=>'required|numeric',
+            'tambahan_200km'=>'required|numeric',
+            'tambahan_350km'=>'required|numeric',
+
+            'denda_per_hari'=>'required|numeric',
+
+            'interval_ganti_oli'=>'required|numeric',
+            'notifikasi_ganti_oli'=>'required|numeric',
         ]);
 
-        $tarif->update($data);
+        $tarif->update($request->all());
 
         return redirect()
             ->route('tarif.index')
-            ->with('success', 'Tarif berhasil diperbarui.');
+            ->with('success','Tarif berhasil diubah.');
     }
 
     public function destroy(Tarif $tarif)
     {
         $tarif->delete();
 
-        return back()->with('success', 'Tarif berhasil dihapus.');
+        return back()->with('success','Tarif berhasil dihapus.');
     }
 }

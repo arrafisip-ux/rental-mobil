@@ -24,6 +24,15 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('pelanggan', PelangganController::class);
 
     Route::resource('penyewaan', PenyewaanController::class);
+    Route::get(
+    'penyewaan/{penyewaan}/pengembalian',
+    [PenyewaanController::class,'pengembalian']
+)->name('penyewaan.pengembalian');
+
+Route::put(
+    'penyewaan/{penyewaan}/pengembalian',
+    [PenyewaanController::class,'selesai']
+)->name('penyewaan.selesai');
 
     Route::resource('tarif', TarifController::class);
 

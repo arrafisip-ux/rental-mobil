@@ -1,25 +1,30 @@
 @csrf
 
+@if ($errors->has('dokumen'))
+<div class="mb-6 bg-red-100 border border-red-300 text-red-700 px-5 py-4 rounded-xl">
+    {{ $errors->first('dokumen') }}
+</div>
+@endif
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
     {{-- Pelanggan --}}
     <div>
-        <label class="block mb-2 font-semibold text-slate-700 dark:text-white">
+        <label class="block mb-2 font-semibold dark:text-white">
             Pelanggan
         </label>
 
         <select
             name="pelanggan_id"
-            required
-            class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3">
+            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+            required>
 
-            <option value="">-- Pilih Pelanggan --</option>
+            <option value="">Pilih Pelanggan</option>
 
             @foreach($pelanggans as $pelanggan)
 
-                <option
-                    value="{{ $pelanggan->id }}"
-                    {{ old('pelanggan_id',$penyewaan->pelanggan_id ?? '')==$pelanggan->id ? 'selected':'' }}>
+                <option value="{{ $pelanggan->id }}"
+                    {{ old('pelanggan_id',$penyewaan->pelanggan_id ?? '') == $pelanggan->id ? 'selected' : '' }}>
 
                     {{ $pelanggan->nama }}
 
@@ -28,82 +33,64 @@
             @endforeach
 
         </select>
-
     </div>
 
     {{-- Mobil --}}
-    <div>
+<div>
 
-        <label class="block mb-2 font-semibold text-slate-700 dark:text-white">
+    <label class="block mb-2 font-semibold dark:text-white">
+        Mobil
+    </label>
 
-            Mobil
+    <select
+        id="mobil"
+        name="mobil_id"
+        class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3"
+        required>
 
-        </label>
+        <option value="">Pilih Mobil</option>
 
-        <select
-            id="mobil"
-            name="mobil_id"
-            required
-            class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3">
+        @foreach($mobils as $mobil)
 
-            <option value="">-- Pilih Mobil --</option>
+            <option
+                value="{{ $mobil->id }}"
 
-            @foreach($mobils as $mobil)
+                data-km="{{ $mobil->kilometer }}"
 
-                <option
-                    value="{{ $mobil->id }}"
-                    data-merk="{{ $mobil->merk }}"
-                    data-tipe="{{ $mobil->tipe }}"
-                    {{ old('mobil_id',$penyewaan->mobil_id ?? '')==$mobil->id ? 'selected':'' }}>
+                data-6="{{ $mobil->tarif->harga_6_jam ?? 0 }}"
 
-                    {{ $mobil->merk }} {{ $mobil->tipe }}
+                data-12="{{ $mobil->tarif->harga_12_jam ?? 0 }}"
 
-                </option>
+                data-24="{{ $mobil->tarif->harga_24_jam ?? 0 }}"
 
-            @endforeach
+                data-overtime="{{ $mobil->tarif->overtime_per_jam ?? 0 }}"
 
-        </select>
+                data-100="{{ $mobil->tarif->tambahan_100km ?? 50000 }}"
 
-    </div>
+                data-200="{{ $mobil->tarif->tambahan_200km ?? 100000 }}"
 
-    {{-- Tanggal Pinjam --}}
-    <div>
+                data-350="{{ $mobil->tarif->tambahan_350km ?? 150000 }}"
 
-        <label class="block mb-2 font-semibold text-slate-700 dark:text-white">
+                data-denda="{{ $mobil->tarif->denda_per_hari ?? 300000 }}"
 
-            Tanggal Pinjam
+                {{ old('mobil_id',$penyewaan->mobil_id ?? '')==$mobil->id ? 'selected' : '' }}>
 
-        </label>
+                {{ $mobil->merk }}
+                {{ $mobil->tipe }}
+                -
+                {{ $mobil->plat_nomor }}
 
-        <input
-            type="datetime-local"
-            name="tanggal_pinjam"
-            value="{{ old('tanggal_pinjam',$penyewaan->tanggal_pinjam ?? '') }}"
-            class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3">
+            </option>
 
-    </div>
+        @endforeach
 
-    {{-- Tanggal Kembali --}}
-    <div>
+    </select>
 
-        <label class="block mb-2 font-semibold text-slate-700 dark:text-white">
-
-            Tanggal Kembali
-
-        </label>
-
-        <input
-            type="datetime-local"
-            name="tanggal_kembali_rencana"
-            value="{{ old('tanggal_kembali_rencana',$penyewaan->tanggal_kembali_rencana ?? '') }}"
-            class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3">
-
-    </div>
-
+</div>
     {{-- Paket --}}
     <div>
 
-        <label class="block mb-2 font-semibold text-slate-700 dark:text-white">
+        <label class="block mb-2 font-semibold dark:text-white">
 
             Paket
 
@@ -112,11 +99,15 @@
         <select
             id="paket"
             name="paket"
-            class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3">
+            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
-            <option value="6 Jam">6 Jam</option>
-            <option value="12 Jam">12 Jam</option>
-            <option value="24 Jam">24 Jam</option>
+            <option>6 Jam</option>
+
+            <option>12 Jam</option>
+
+            <option>24 Jam</option>
+
+            <option>Harian</option>
 
         </select>
 
@@ -125,155 +116,495 @@
     {{-- Jenis Perjalanan --}}
     <div>
 
-        <label class="block mb-2 font-semibold text-slate-700 dark:text-white">
+        <label class="block mb-2 font-semibold dark:text-white">
 
             Jenis Perjalanan
 
         </label>
 
         <select
-            id="jenis"
+            id="jenis_perjalanan"
             name="jenis_perjalanan"
-            class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3">
+            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
-            <option value="Dalam Kota">
-                Dalam Kota
-            </option>
+            <option>Dalam Kota</option>
 
-            <option value="Luar Kota">
-                Luar Kota
-            </option>
+            <option>Luar Kota</option>
 
         </select>
+
+    </div>
+
+    {{-- Tujuan --}}
+    <div>
+
+        <label class="block mb-2 font-semibold dark:text-white">
+
+            Tujuan
+
+        </label>
+
+        <input
+            type="text"
+            name="tujuan"
+            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+            value="{{ old('tujuan',$penyewaan->tujuan ?? '') }}">
 
     </div>
 
     {{-- Estimasi KM --}}
     <div>
 
-        <label class="block mb-2 font-semibold text-slate-700 dark:text-white">
+        <label class="block mb-2 font-semibold dark:text-white">
 
             Estimasi KM
 
         </label>
 
         <input
-            id="estimasi"
             type="number"
+            id="estimasi_km"
             name="estimasi_km"
-            value="0"
-            class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3">
+            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
+            value="{{ old('estimasi_km',$penyewaan->estimasi_km ?? 0) }}">
+
+    </div>
+
+    {{-- Tanggal Pinjam --}}
+    <div>
+
+        <label class="block mb-2 font-semibold dark:text-white">
+
+            Tanggal Pinjam
+
+        </label>
+
+        <input
+            type="datetime-local"
+            name="tanggal_pinjam"
+            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+
+    </div>
+
+    {{-- Tanggal Kembali --}}
+    <div>
+
+        <label class="block mb-2 font-semibold dark:text-white">
+
+            Rencana Kembali
+
+        </label>
+
+        <input
+            type="datetime-local"
+            name="tanggal_kembali_rencana"
+            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
     </div>
 
 </div>
 
-<hr class="my-8 dark:border-slate-700">
+<hr class="my-8">
 
-<h3 class="text-xl font-bold mb-4 dark:text-white">
-Checklist Dokumen
-</h3>
+<h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">
+    Verifikasi Dokumen
+</h2>
 
-<div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
-<label><input type="checkbox" name="cek_ktp"> KTP</label>
+    <label class="flex items-center gap-3 bg-slate-100 dark:bg-slate-700 rounded-xl p-4 cursor-pointer">
 
-<label><input type="checkbox" name="cek_sim"> SIM</label>
+        <input
+            type="checkbox"
+            id="cek_ktp"
+            name="cek_ktp"
+            class="w-5 h-5">
 
-<label><input type="checkbox" name="cek_id_karyawan"> ID Karyawan</label>
+        <span class="dark:text-white font-medium">
+            KTP
+        </span>
 
-<label><input type="checkbox" name="cek_slip_gaji"> Slip Gaji</label>
+    </label>
 
-<label><input type="checkbox" name="cek_tempat_usaha"> Tempat Usaha</label>
+    <label class="flex items-center gap-3 bg-slate-100 dark:bg-slate-700 rounded-xl p-4 cursor-pointer">
+
+        <input
+            type="checkbox"
+            id="cek_sim"
+            name="cek_sim"
+            class="w-5 h-5">
+
+        <span class="dark:text-white font-medium">
+            SIM
+        </span>
+
+    </label>
+
+    <label class="flex items-center gap-3 bg-slate-100 dark:bg-slate-700 rounded-xl p-4 cursor-pointer">
+
+        <input
+            type="checkbox"
+            id="cek_id_karyawan"
+            name="cek_id_karyawan"
+            class="w-5 h-5">
+
+        <span class="dark:text-white font-medium">
+            ID Karyawan
+        </span>
+
+    </label>
+
+    <label class="flex items-center gap-3 bg-slate-100 dark:bg-slate-700 rounded-xl p-4 cursor-pointer">
+
+        <input
+            type="checkbox"
+            id="cek_slip_gaji"
+            name="cek_slip_gaji"
+            class="w-5 h-5">
+
+        <span class="dark:text-white font-medium">
+            Slip Gaji
+        </span>
+
+    </label>
+
+    <label class="flex items-center gap-3 bg-slate-100 dark:bg-slate-700 rounded-xl p-4 cursor-pointer">
+
+        <input
+            type="checkbox"
+            id="cek_tempat_usaha"
+            name="cek_tempat_usaha"
+            class="w-5 h-5">
+
+        <span class="dark:text-white font-medium">
+            Tempat Usaha
+        </span>
+
+    </label>
 
 </div>
 
-<hr class="my-8 dark:border-slate-700">
+<div
+    id="statusDokumen"
+    class="mt-5 rounded-xl bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 p-4">
 
-<h3 class="text-xl font-bold mb-4 dark:text-white">
-Rincian Biaya
-</h3>
+    Lengkapi persyaratan:
+    <br>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    ✔ KTP
+    <br>
 
-<div>
+    ✔ SIM
+    <br>
 
-<label class="block mb-2 dark:text-white">
-Harga Sewa
-</label>
+    ✔ Salah satu:
+    ID Karyawan / Slip Gaji / Tempat Usaha
+
+</div>
+
+<hr class="my-10">
+
+<h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-6">
+
+    Rincian Biaya
+
+</h2>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+    <div class="bg-slate-100 dark:bg-slate-700 rounded-xl p-5">
+
+        <div class="flex justify-between mb-3">
+
+            <span class="dark:text-white">
+                Harga Paket
+            </span>
+
+            <span
+                id="txtHargaSewa"
+                class="font-bold text-blue-600">
+
+                Rp0
+
+            </span>
+
+        </div>
+
+        <div class="flex justify-between mb-3">
+
+            <span class="dark:text-white">
+                Tambahan Luar Kota
+            </span>
+
+            <span
+                id="txtLuarKota"
+                class="font-bold text-orange-500">
+
+                Rp0
+
+            </span>
+
+        </div>
+
+        <div class="flex justify-between mb-3">
+
+            <span class="dark:text-white">
+                Overtime
+            </span>
+
+            <span
+                id="txtOvertime"
+                class="font-bold text-indigo-500">
+
+                Rp0
+
+            </span>
+
+        </div>
+
+        <div class="flex justify-between">
+
+            <span class="dark:text-white">
+                Denda
+            </span>
+
+            <span
+                id="txtDenda"
+                class="font-bold text-red-500">
+
+                Rp0
+
+            </span>
+
+        </div>
+
+    </div>
+
+    <div class="bg-green-100 dark:bg-green-900 rounded-xl p-6 flex flex-col justify-center">
+
+        <div class="text-center">
+
+            <div class="text-slate-700 dark:text-slate-200">
+
+                TOTAL PEMBAYARAN
+
+            </div>
+
+            <div
+                id="txtTotal"
+                class="text-4xl font-bold text-green-700 dark:text-green-300 mt-3">
+
+                Rp0
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 
 <input
-id="harga"
-name="harga_sewa"
-readonly
-value="0"
-class="w-full rounded-xl bg-slate-100 dark:bg-slate-700 dark:text-white">
-
-</div>
-
-<div>
-
-<label class="block mb-2 dark:text-white">
-Biaya Luar Kota
-</label>
+    type="hidden"
+    id="harga_sewa"
+    name="harga_sewa">
 
 <input
-id="luar"
-name="biaya_luar_kota"
-readonly
-value="0"
-class="w-full rounded-xl bg-slate-100 dark:bg-slate-700 dark:text-white">
-
-</div>
-
-<div>
-
-<label class="block mb-2 dark:text-white">
-Total Bayar
-</label>
+    type="hidden"
+    id="biaya_luar_kota"
+    name="biaya_luar_kota">
 
 <input
-id="total"
-name="total_bayar"
-readonly
-value="0"
-class="w-full rounded-xl bg-green-100 dark:bg-green-900 font-bold">
+    type="hidden"
+    id="overtime"
+    name="overtime"
+    value="0">
+
+<input
+    type="hidden"
+    id="denda"
+    name="denda"
+    value="0">
+
+<input
+    type="hidden"
+    id="total_bayar"
+    name="total_bayar">
+
+<input
+    type="hidden"
+    id="km_awal"
+    name="km_awal">
+
+<input
+    type="hidden"
+    name="lama_sewa"
+    value="1">
+
+<input
+    type="hidden"
+    name="status_pembayaran"
+    value="Belum Lunas">
+
+<div class="mt-10 flex gap-3">
+
+    <button
+        type="submit"
+        id="btnSimpan"
+        disabled
+        class="bg-blue-600 disabled:bg-slate-400 hover:bg-blue-700 text-white px-6 py-3 rounded-xl transition">
+
+        Simpan Transaksi
+
+    </button>
+
+    <a
+        href="{{ route('penyewaan.index') }}"
+        class="bg-slate-500 hover:bg-slate-600 text-white px-6 py-3 rounded-xl">
+
+        Batal
+
+    </a>
 
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
 
-</div>
+    const mobil = document.getElementById('mobil');
+    const paket = document.getElementById('paket');
+    const perjalanan = document.getElementById('jenis_perjalanan');
+    const km = document.getElementById('estimasi_km');
 
-<div class="mt-8">
+    const hargaInput = document.getElementById('harga_sewa');
+    const luarInput = document.getElementById('biaya_luar_kota');
+    const totalInput = document.getElementById('total_bayar');
+    const kmAwal = document.getElementById('km_awal');
 
-<label class="block mb-2 dark:text-white">
+    const txtHarga = document.getElementById('txtHargaSewa');
+    const txtLuar = document.getElementById('txtLuarKota');
+    const txtTotal = document.getElementById('txtTotal');
 
-Catatan
+    const cekKtp = document.getElementById('cek_ktp');
+    const cekSim = document.getElementById('cek_sim');
+    const cekId = document.getElementById('cek_id_karyawan');
+    const cekSlip = document.getElementById('cek_slip_gaji');
+    const cekUsaha = document.getElementById('cek_tempat_usaha');
 
-</label>
+    const status = document.getElementById('statusDokumen');
+    const btn = document.getElementById('btnSimpan');
 
-<textarea
-name="catatan"
-rows="3"
-class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white"></textarea>
+    function rupiah(angka){
+        return "Rp" + Number(angka).toLocaleString('id-ID');
+    }
 
-</div>
+    function hitung(){
 
-<div class="mt-8 flex gap-3">
+        if(mobil.selectedIndex<=0){
+            return;
+        }
 
-<button
-type="submit"
-class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl">
+        const opt=mobil.options[mobil.selectedIndex];
 
-Simpan Transaksi
+        kmAwal.value=opt.dataset.km;
 
-</button>
+        let harga=0;
 
-<a
-href="{{ route('penyewaan.index') }}"
-class="bg-slate-500 hover:bg-slate-600 text-white px-6 py-3 rounded-xl">
+        switch(paket.value){
 
-Batal
+            case "6 Jam":
+                harga=Number(opt.dataset[6]);
+                break;
 
-</a>
+            case "12 Jam":
+                harga=Number(opt.dataset[12]);
+                break;
 
-</div>
+            case "24 Jam":
+                harga=Number(opt.dataset[24]);
+                break;
+
+            default:
+                harga=Number(opt.dataset[24]);
+
+        }
+
+        let luar=0;
+
+        if(perjalanan.value=="Luar Kota"){
+
+            if(km.value>350){
+
+                luar=Number(opt.dataset[350]);
+
+            }else if(km.value>200){
+
+                luar=Number(opt.dataset[200]);
+
+            }else if(km.value>100){
+
+                luar=Number(opt.dataset[100]);
+
+            }
+
+        }
+
+        const total=harga+luar;
+
+        hargaInput.value=harga;
+        luarInput.value=luar;
+        totalInput.value=total;
+
+        txtHarga.innerHTML=rupiah(harga);
+        txtLuar.innerHTML=rupiah(luar);
+        txtTotal.innerHTML=rupiah(total);
+
+    }
+
+    function validasi(){
+
+        const lengkap=
+
+            cekKtp.checked &&
+            cekSim.checked &&
+            (
+                cekId.checked ||
+                cekSlip.checked ||
+                cekUsaha.checked
+            );
+
+        if(lengkap){
+
+            btn.disabled=false;
+
+            status.className="mt-5 rounded-xl bg-green-100 text-green-700 p-4";
+
+            status.innerHTML="✔ Persyaratan dokumen sudah lengkap.";
+
+        }else{
+
+            btn.disabled=true;
+
+            status.className="mt-5 rounded-xl bg-yellow-100 text-yellow-700 p-4";
+
+            status.innerHTML="Lengkapi KTP + SIM + salah satu ID Karyawan / Slip Gaji / Tempat Usaha.";
+
+        }
+
+    }
+
+    mobil.addEventListener('change',hitung);
+    paket.addEventListener('change',hitung);
+    perjalanan.addEventListener('change',hitung);
+    km.addEventListener('input',hitung);
+
+    cekKtp.addEventListener('change',validasi);
+    cekSim.addEventListener('change',validasi);
+    cekId.addEventListener('change',validasi);
+    cekSlip.addEventListener('change',validasi);
+    cekUsaha.addEventListener('change',validasi);
+
+    hitung();
+    validasi();
+
+});
+</script>
