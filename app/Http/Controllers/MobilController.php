@@ -53,8 +53,26 @@ class MobilController extends Controller
 }
 
     public function show(Mobil $mobil)
-    {
-    }
+{
+    $mobil->load([
+
+        'penyewaans.pelanggan',
+
+        'perawatans',
+
+        'riwayatOlis',
+
+        'pemakaianPribadis',
+
+        'cekKendaraans',
+
+    ]);
+
+    return view(
+        'mobil.show',
+        compact('mobil')
+    );
+}
 
     public function edit(Mobil $mobil)
     {
