@@ -5,55 +5,74 @@ namespace App\Http\Controllers;
 use App\Models\Mobil;
 use App\Models\Pelanggan;
 use App\Models\Penyewaan;
-use App\Models\RiwayatOli;
-use App\Models\Tarif;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Statistik
+        // Statistik Mobil
         $totalMobil = Mobil::count();
 
+        $mobilReady = Mobil::where('status', 'Ready')->count();
+
+        $mobilDipakai = Mobil::where('status', 'Dipakai')->count();
+
+        $mobilPengecekan = Mobil::where('status', 'Pengecekan')->count();
+
+        // Statistik Pelanggan
         $totalPelanggan = Pelanggan::count();
 
+        // Penyewaan
         $penyewaanAktif = Penyewaan::where('status', 'Berjalan')->count();
 
+        // Pendapatan
         $pendapatan = Penyewaan::sum('total_bayar');
 
-        // Notifikasi Ganti Oli
-        $mobilPerluOli = 0;
+        // Total Denda
+        $totalDenda = Penyewaan::sum('denda');
 
-        $tarif = Tarif::first();
+        // ==========================
+        // NOTIFIKASI GANTI OLI
+        // ==========================
 
-        if ($tarif) {
+        $mobilPerluServis = Mobil::whereRaw('kilometer >= km_servis_berikutnya')
+            ->get();
 
-            $riwayatOlis = RiwayatOli::with('mobil')->get();
+        $mobilHampirServis = Mobil::whereRaw('kilometer < km_servis_berikutnya')
+            ->whereRaw('(km_servis_berikutnya - kilometer) <= 500')
+            ->get();
 
-            foreach ($riwayatOlis as $item) {
+        // ==========================
+        // STNK Hampir Habis
+        // ==========================
 
-                if (!$item->mobil) {
-                    continue;
-                }
-
-                $sisaKm = $item->km_berikutnya - $item->mobil->kilometer;
-
-                if ($sisaKm <= $tarif->notifikasi_ganti_oli) {
-
-                    $mobilPerluOli++;
-
-                }
-
-            }
-
-        }
+        $stnkHampirHabis = Mobil::whereDate(
+                'masa_berlaku_stnk',
+                '<=',
+                Carbon::now()->addDays(30)
+            )
+            ->get();
 
         return view('dashboard.index', compact(
+
             'totalMobil',
+            'mobilReady',
+            'mobilDipakai',
+            'mobilPengecekan',
+
             'totalPelanggan',
+
             'penyewaanAktif',
+
             'pendapatan',
-            'mobilPerluOli'
+            'totalDenda',
+
+            'mobilPerluServis',
+            'mobilHampirServis',
+
+            'stnkHampirHabis'
+
         ));
     }
 }
