@@ -79,12 +79,22 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('riwayat-oli', RiwayatOliController::class);
 
     /*
-    |--------------------------------------------------------------------------
-    | Laporan
-    |--------------------------------------------------------------------------
-    */
+|--------------------------------------------------------------------------
+| Laporan
+|--------------------------------------------------------------------------
+*/
 
-    Route::resource('laporan', LaporanController::class);
+Route::get(
+    'laporan/print',
+    [LaporanController::class, 'print']
+)->name('laporan.print');
+
+Route::get(
+    'laporan/pdf',
+    [LaporanController::class, 'pdf']
+)->name('laporan.pdf');
+
+Route::resource('laporan', LaporanController::class);
 
 });
 

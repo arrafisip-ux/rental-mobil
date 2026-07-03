@@ -129,24 +129,41 @@
 
         </div>
 
-        <div class="mt-6 flex gap-3">
+        <div class="mt-6 flex gap-3 flex-wrap">
 
-            <button
-                class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl">
+    <button
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl">
 
-                Filter
+        Filter
 
-            </button>
+    </button>
 
-            <a
-                href="{{ route('laporan.index') }}"
-                class="bg-slate-500 hover:bg-slate-600 text-white px-6 py-3 rounded-xl">
+    <a
+        href="{{ route('laporan.index') }}"
+        class="bg-slate-500 hover:bg-slate-600 text-white px-6 py-3 rounded-xl">
 
-                Reset
+        Reset
 
-            </a>
+    </a>
 
-        </div>
+    <a
+        href="{{ route('laporan.print', request()->query()) }}"
+        target="_blank"
+        class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl">
+
+        Print
+
+    </a>
+
+    <a
+        href="{{ route('laporan.pdf', request()->query()) }}"
+        class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl">
+
+        Export PDF
+
+    </a>
+
+</div>
 
     </form>
 
@@ -199,40 +216,28 @@
             <tr class="border-t">
 
                 <td class="p-4">
-
                     {{ $item->no_transaksi }}
-
                 </td>
 
                 <td class="p-4">
-
                     {{ $item->pelanggan->nama }}
-
                 </td>
 
                 <td class="p-4">
-
                     {{ $item->mobil->merk }}
                     {{ $item->mobil->tipe }}
-
                 </td>
 
                 <td class="p-4">
-
                     {{ $item->tanggal_pinjam }}
-
                 </td>
 
                 <td class="p-4">
-
                     {{ $item->status }}
-
                 </td>
 
                 <td class="p-4 text-right">
-
                     Rp {{ number_format($item->total_bayar,0,',','.') }}
-
                 </td>
 
             </tr>
