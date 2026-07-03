@@ -11,7 +11,41 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Statistik Mobil
+        // Update status servis otomatis
+        $mobils = Mobil::all();
+
+        foreach ($mobils as $mobil) {
+
+            if ($mobil->km_servis_berikutnya) {
+
+                $sisa = $mobil->km_servis_berikutnya - $mobil->kilometer;
+
+                if ($sisa <= 0) {
+
+                    $mobil->status_servis = 'Terlambat Servis';
+
+                } elseif ($sisa <= 500) {
+
+                    $mobil->status_servis = 'Segera Servis';
+
+                } else {
+
+                    $mobil->status_servis = 'Aman';
+
+                }
+
+                $mobil->save();
+
+            }
+
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Statistik
+        |--------------------------------------------------------------------------
+        */
+
         $totalMobil = Mobil::count();
 
         $mobilReady = Mobil::where('status', 'Ready')->count();
@@ -20,45 +54,52 @@ class DashboardController extends Controller
 
         $mobilPengecekan = Mobil::where('status', 'Pengecekan')->count();
 
-        // Statistik Pelanggan
         $totalPelanggan = Pelanggan::count();
 
-        // Penyewaan
         $penyewaanAktif = Penyewaan::where('status', 'Berjalan')->count();
 
-        // Pendapatan
         $pendapatan = Penyewaan::sum('total_bayar');
 
-        // Total Denda
         $totalDenda = Penyewaan::sum('denda');
 
-        // ==========================
-        // NOTIFIKASI GANTI OLI
-        // ==========================
+        /*
+        |--------------------------------------------------------------------------
+        | Monitoring Servis
+        |--------------------------------------------------------------------------
+        */
 
-        $mobilPerluServis = Mobil::whereRaw('kilometer >= km_servis_berikutnya')
+        $mobilPerluServis = Mobil::where('status_servis', 'Terlambat Servis')
+            ->orderBy('kilometer')
             ->get();
 
-        $mobilHampirServis = Mobil::whereRaw('kilometer < km_servis_berikutnya')
-            ->whereRaw('(km_servis_berikutnya - kilometer) <= 500')
+        $mobilHampirServis = Mobil::where('status_servis', 'Segera Servis')
+            ->orderBy('kilometer')
             ->get();
 
-        // ==========================
-        // STNK Hampir Habis
-        // ==========================
+        $mobilServisTerlambat = $mobilPerluServis->count();
+
+        /*
+        |--------------------------------------------------------------------------
+        | STNK
+        |--------------------------------------------------------------------------
+        */
 
         $stnkHampirHabis = Mobil::whereDate(
                 'masa_berlaku_stnk',
                 '<=',
                 Carbon::now()->addDays(30)
             )
+            ->orderBy('masa_berlaku_stnk')
             ->get();
 
         return view('dashboard.index', compact(
 
             'totalMobil',
+
             'mobilReady',
+
             'mobilDipakai',
+
             'mobilPengecekan',
 
             'totalPelanggan',
@@ -66,10 +107,14 @@ class DashboardController extends Controller
             'penyewaanAktif',
 
             'pendapatan',
+
             'totalDenda',
 
             'mobilPerluServis',
+
             'mobilHampirServis',
+
+            'mobilServisTerlambat',
 
             'stnkHampirHabis'
 

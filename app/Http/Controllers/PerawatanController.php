@@ -25,34 +25,34 @@ class PerawatanController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'mobil_id' => 'required|exists:mobils,id',
-            'tanggal_perawatan' => 'required|date',
-            'jenis_perawatan' => 'required',
-            'nama_sparepart' => 'nullable|string|max:255',
-            'km_servis' => 'required|integer|min:0',
-            'km_servis_berikutnya' => 'required|integer|min:0',
-            'biaya' => 'required|numeric|min:0',
-            'bengkel' => 'nullable|string|max:255',
-            'keterangan' => 'nullable|string',
-        ]);
+{
+    $request->validate([
+        'mobil_id' => 'required|exists:mobils,id',
+        'tanggal_perawatan' => 'required|date',
+        'jenis_perawatan' => 'required',
+        'nama_sparepart' => 'nullable|string|max:255',
+        'km_servis' => 'required|integer|min:0',
+        'km_servis_berikutnya' => 'required|integer|min:0',
+        'biaya' => 'required|numeric|min:0',
+        'bengkel' => 'nullable|string|max:255',
+        'keterangan' => 'nullable|string',
+    ]);
 
-        $perawatan = Perawatan::create($request->all());
+    $perawatan = Perawatan::create($request->all());
 
-        // Update data mobil
-        $mobil = Mobil::findOrFail($request->mobil_id);
+    $mobil = Mobil::find($request->mobil_id);
 
-        $mobil->update([
-            'km_terakhir_servis'     => $request->km_servis,
-            'km_servis_berikutnya'   => $request->km_servis_berikutnya,
-            'tanggal_servis_terakhir'=> $request->tanggal_perawatan,
-        ]);
+    $mobil->update([
+        'km_terakhir_servis'     => $request->km_servis,
+        'km_servis_berikutnya'   => $request->km_servis_berikutnya,
+        'tanggal_servis_terakhir'=> $request->tanggal_perawatan,
+        'status_servis'          => 'Aman',
+    ]);
 
-        return redirect()
-            ->route('perawatan.index')
-            ->with('success', 'Data perawatan berhasil ditambahkan.');
-    }
+    return redirect()
+        ->route('perawatan.index')
+        ->with('success', 'Data perawatan berhasil ditambahkan.');
+}
 
     public function edit(Perawatan $perawatan)
     {
@@ -65,34 +65,33 @@ class PerawatanController extends Controller
     }
 
     public function update(Request $request, Perawatan $perawatan)
-    {
-        $request->validate([
-            'mobil_id' => 'required|exists:mobils,id',
-            'tanggal_perawatan' => 'required|date',
-            'jenis_perawatan' => 'required',
-            'nama_sparepart' => 'nullable|string|max:255',
-            'km_servis' => 'required|integer|min:0',
-            'km_servis_berikutnya' => 'required|integer|min:0',
-            'biaya' => 'required|numeric|min:0',
-            'bengkel' => 'nullable|string|max:255',
-            'keterangan' => 'nullable|string',
-        ]);
+{
+    $request->validate([
+        'mobil_id' => 'required|exists:mobils,id',
+        'tanggal_perawatan' => 'required|date',
+        'jenis_perawatan' => 'required',
+        'nama_sparepart' => 'nullable|string|max:255',
+        'km_servis' => 'required|integer|min:0',
+        'km_servis_berikutnya' => 'required|integer|min:0',
+        'biaya' => 'required|numeric|min:0',
+        'bengkel' => 'nullable|string|max:255',
+        'keterangan' => 'nullable|string',
+    ]);
 
-        $perawatan->update($request->all());
+    $perawatan->update($request->all());
 
-        // Update data mobil
-        $mobil = Mobil::findOrFail($request->mobil_id);
+    $mobil = Mobil::find($request->mobil_id);
 
-        $mobil->update([
-            'km_terakhir_servis'     => $request->km_servis,
-            'km_servis_berikutnya'   => $request->km_servis_berikutnya,
-            'tanggal_servis_terakhir'=> $request->tanggal_perawatan,
-        ]);
+    $mobil->update([
+        'km_terakhir_servis'      => $request->km_servis,
+        'km_servis_berikutnya'    => $request->km_servis_berikutnya,
+        'tanggal_servis_terakhir' => $request->tanggal_perawatan,
+    ]);
 
-        return redirect()
-            ->route('perawatan.index')
-            ->with('success', 'Data perawatan berhasil diperbarui.');
-    }
+    return redirect()
+        ->route('perawatan.index')
+        ->with('success', 'Data perawatan berhasil diperbarui.');
+}
 
     public function destroy(Perawatan $perawatan)
     {

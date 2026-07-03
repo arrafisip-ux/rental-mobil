@@ -17,7 +17,7 @@
 </div>
 
 {{-- Statistik --}}
-<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
 
     <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
         <p class="text-slate-500">🚗 Total Mobil</p>
@@ -75,6 +75,20 @@
         </h2>
     </div>
 
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+        <p class="text-slate-500">🛠️ Perlu Servis</p>
+        <h2 class="text-4xl font-bold mt-2 text-yellow-600">
+            {{ $mobilPerluServis->count() }}
+        </h2>
+    </div>
+
+    <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-lg p-6">
+        <p class="text-slate-500">🔴 Terlambat Servis</p>
+        <h2 class="text-4xl font-bold mt-2 text-red-600">
+            {{ $mobilServisTerlambat }}
+        </h2>
+    </div>
+
 </div>
 
 {{-- Operasional --}}
@@ -88,7 +102,7 @@
 
         @forelse($mobilPerluServis as $mobil)
 
-            <div class="border-b py-3">
+            <div class="border-b border-slate-200 dark:border-slate-700 py-3">
 
                 <div class="font-semibold dark:text-white">
                     {{ $mobil->merk }} {{ $mobil->tipe }}
@@ -122,7 +136,7 @@
 
         @forelse($mobilHampirServis as $mobil)
 
-            <div class="border-b py-3">
+            <div class="border-b border-slate-200 dark:border-slate-700 py-3">
 
                 <div class="font-semibold dark:text-white">
                     {{ $mobil->merk }} {{ $mobil->tipe }}
@@ -159,7 +173,7 @@
 
     @forelse($stnkHampirHabis as $mobil)
 
-        <div class="border-b py-3">
+        <div class="border-b border-slate-200 dark:border-slate-700 py-3">
 
             <div class="font-semibold dark:text-white">
                 {{ $mobil->merk }} {{ $mobil->tipe }}
@@ -170,7 +184,8 @@
             </div>
 
             <div class="text-red-600 font-semibold mt-1">
-                Berlaku sampai {{ \Carbon\Carbon::parse($mobil->masa_berlaku_stnk)->format('d-m-Y') }}
+                Berlaku sampai
+                {{ \Carbon\Carbon::parse($mobil->masa_berlaku_stnk)->format('d-m-Y') }}
             </div>
 
         </div>
