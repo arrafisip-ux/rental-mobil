@@ -46,6 +46,14 @@ class Mobil extends Model
     {
         return $this->hasMany(Perawatan::class);
     }
+    public function pemakaianPribadis()
+{
+    return $this->hasMany(PemakaianPribadi::class);
+}
+public function cekKendaraans()
+{
+    return $this->hasMany(CekKendaraan::class);
+}
 
     // Relasi tarif berdasarkan tipe mobil
     public function tarif()
