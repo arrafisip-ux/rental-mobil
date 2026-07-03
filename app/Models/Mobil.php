@@ -16,10 +16,19 @@ class Mobil extends Model
         'kapasitas',
         'transmisi',
         'bahan_bakar',
+
         'kilometer',
+
+        // Data servis
+        'km_terakhir_servis',
+        'km_servis_berikutnya',
+        'tanggal_servis_terakhir',
+
         'nomor_stnk',
         'masa_berlaku_stnk',
+
         'foto',
+
         'status',
     ];
 
@@ -32,10 +41,11 @@ class Mobil extends Model
     {
         return $this->hasMany(RiwayatOli::class);
     }
+
     public function perawatans()
-{
-    return $this->hasMany(Perawatan::class);
-}
+    {
+        return $this->hasMany(Perawatan::class);
+    }
 
     // Relasi tarif berdasarkan tipe mobil
     public function tarif()

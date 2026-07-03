@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Perawatan;
 use App\Models\Mobil;
+use App\Models\Perawatan;
 use Illuminate\Http\Request;
 
 class PerawatanController extends Controller
@@ -38,7 +38,16 @@ class PerawatanController extends Controller
             'keterangan' => 'nullable|string',
         ]);
 
-        Perawatan::create($request->all());
+        $perawatan = Perawatan::create($request->all());
+
+        // Update data mobil
+        $mobil = Mobil::findOrFail($request->mobil_id);
+
+        $mobil->update([
+            'km_terakhir_servis'     => $request->km_servis,
+            'km_servis_berikutnya'   => $request->km_servis_berikutnya,
+            'tanggal_servis_terakhir'=> $request->tanggal_perawatan,
+        ]);
 
         return redirect()
             ->route('perawatan.index')
@@ -70,6 +79,15 @@ class PerawatanController extends Controller
         ]);
 
         $perawatan->update($request->all());
+
+        // Update data mobil
+        $mobil = Mobil::findOrFail($request->mobil_id);
+
+        $mobil->update([
+            'km_terakhir_servis'     => $request->km_servis,
+            'km_servis_berikutnya'   => $request->km_servis_berikutnya,
+            'tanggal_servis_terakhir'=> $request->tanggal_perawatan,
+        ]);
 
         return redirect()
             ->route('perawatan.index')
