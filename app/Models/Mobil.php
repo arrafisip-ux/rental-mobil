@@ -57,7 +57,7 @@ public function cekKendaraans()
 
     // Relasi tarif berdasarkan tipe mobil
     public function tarif()
-    {
-        return $this->hasOne(Tarif::class, 'jenis_mobil', 'tipe');
-    }
+{
+    return $this->hasOne(Tarif::class);
+}
 }

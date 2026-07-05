@@ -148,16 +148,7 @@ shadow-sm transition-all duration-300">
 
 </a>
 
-                <a href="{{ route('riwayat-oli.index') }}"
-                    class="flex items-center gap-3 rounded-xl px-4 py-3 transition-all duration-200
-                    {{ request()->routeIs('riwayat-oli.*')
-                        ? 'bg-blue-600 text-white shadow-md'
-                        : 'text-slate-700 dark:text-slate-200 hover:bg-blue-50 dark:hover:bg-slate-700 hover:text-blue-600 dark:hover:text-white' }}">
-
-                    <span>🛢️</span>
-                    <span>Riwayat Oli</span>
-
-                </a>
+                
 
             </div>
 

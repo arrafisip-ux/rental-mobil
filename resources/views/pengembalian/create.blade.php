@@ -110,10 +110,12 @@
                     </label>
 
                     <input
-                        id="km_awal"
-                        value="{{ $penyewaan->km_awal }}"
-                        readonly
-                        class="w-full rounded-xl bg-slate-100 dark:bg-slate-700">
+    type="number"
+    id="km_awal"
+    name="km_awal"
+    value="{{ $penyewaan->km_awal }}"
+    readonly
+    class="w-full rounded-xl bg-slate-100 dark:bg-slate-700">
 
                 </div>
 
@@ -202,10 +204,12 @@
             </label>
 
             <input
-                id="overtime"
-                name="overtime"
-                readonly
-                class="w-full rounded-xl bg-slate-100 dark:bg-slate-700">
+    type="number"
+    id="overtime"
+    name="overtime"
+    value="0"
+    readonly
+    class="w-full rounded-xl bg-slate-100 dark:bg-slate-700">
         </div>
 
         <div>

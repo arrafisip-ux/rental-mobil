@@ -77,6 +77,9 @@ Route::middleware(['auth'])->group(function () {
     );
 
     Route::resource('riwayat-oli', RiwayatOliController::class);
+    
+    Route::get('/mobil/{mobil}/servis-data', [PerawatanController::class, 'servisData'])
+    ->name('mobil.servis-data');
 
     /*
 |--------------------------------------------------------------------------

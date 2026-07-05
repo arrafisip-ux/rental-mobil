@@ -179,10 +179,11 @@
 
         </label>
 
-        <input
-            type="datetime-local"
-            name="tanggal_pinjam"
-            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+       <input
+    type="datetime-local"
+    id="tanggal_pinjam"
+    name="tanggal_pinjam"
+    class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
     </div>
 
@@ -196,9 +197,10 @@
         </label>
 
         <input
-            type="datetime-local"
-            name="tanggal_kembali_rencana"
-            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+    type="datetime-local"
+    id="tanggal_kembali"
+    name="tanggal_kembali_rencana"
+    class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
     </div>
 
@@ -438,6 +440,7 @@
 
 <input
     type="hidden"
+    id="lama_sewa"
     name="lama_sewa"
     value="1">
 
@@ -475,10 +478,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const perjalanan = document.getElementById('jenis_perjalanan');
     const km = document.getElementById('estimasi_km');
 
+    const tanggalPinjam = document.getElementById('tanggal_pinjam');
+    const tanggalKembali = document.getElementById('tanggal_kembali');
+
     const hargaInput = document.getElementById('harga_sewa');
     const luarInput = document.getElementById('biaya_luar_kota');
     const totalInput = document.getElementById('total_bayar');
     const kmAwal = document.getElementById('km_awal');
+    const lamaSewa = document.getElementById('lama_sewa');
 
     const txtHarga = document.getElementById('txtHargaSewa');
     const txtLuar = document.getElementById('txtLuarKota');
@@ -497,72 +504,139 @@ document.addEventListener('DOMContentLoaded', function () {
         return "Rp" + Number(angka).toLocaleString('id-ID');
     }
 
+    function hitungTanggal(){
+
+    if(!tanggalPinjam.value) return;
+
+    const mulai = new Date(tanggalPinjam.value);
+    let kembali = new Date(mulai);
+
+    switch(paket.value){
+
+        case "6 Jam":
+
+            kembali.setHours(kembali.getHours()+6);
+            tanggalKembali.disabled = true;
+            lamaSewa.value = 1;
+            break;
+
+        case "12 Jam":
+
+            kembali.setHours(kembali.getHours()+12);
+            tanggalKembali.disabled = true;
+            lamaSewa.value = 1;
+            break;
+
+        case "24 Jam":
+
+            kembali.setDate(kembali.getDate()+1);
+            tanggalKembali.disabled = true;
+            lamaSewa.value = 1;
+            break;
+
+        case "Harian":
+
+            tanggalKembali.disabled = false;
+            return;
+
+    }
+
+    const yyyy = kembali.getFullYear();
+    const mm = String(kembali.getMonth()+1).padStart(2,'0');
+    const dd = String(kembali.getDate()).padStart(2,'0');
+    const hh = String(kembali.getHours()).padStart(2,'0');
+    const ii = String(kembali.getMinutes()).padStart(2,'0');
+
+    tanggalKembali.value =
+        `${yyyy}-${mm}-${dd}T${hh}:${ii}`;
+
+}
+
     function hitung(){
 
         if(mobil.selectedIndex<=0){
             return;
         }
 
-        const opt=mobil.options[mobil.selectedIndex];
+        const opt = mobil.options[mobil.selectedIndex];
 
-        kmAwal.value=opt.dataset.km;
+        kmAwal.value = opt.dataset.km;
 
-        let harga=0;
+        let harga = 0;
 
         switch(paket.value){
 
             case "6 Jam":
-                harga=Number(opt.dataset[6]);
+                harga = Number(opt.dataset[6]);
                 break;
 
             case "12 Jam":
-                harga=Number(opt.dataset[12]);
+                harga = Number(opt.dataset[12]);
                 break;
 
             case "24 Jam":
-                harga=Number(opt.dataset[24]);
+                harga = Number(opt.dataset[24]);
                 break;
 
-            default:
-                harga=Number(opt.dataset[24]);
+           default:
 
+    let hari = 1;
+
+    if(tanggalPinjam.value && tanggalKembali.value){
+
+        const awal = new Date(tanggalPinjam.value);
+        const akhir = new Date(tanggalKembali.value);
+
+        hari = Math.ceil(
+            (akhir-awal)/(1000*60*60*24)
+        );
+
+        if(hari < 1){
+            hari = 1;
         }
 
-        let luar=0;
+    }
+
+    lamaSewa.value = hari;
+
+    harga = Number(opt.dataset[24]) * hari;
+        }
+
+        let luar = 0;
 
         if(perjalanan.value=="Luar Kota"){
 
-            if(km.value>350){
+            if(Number(km.value)>350){
 
-                luar=Number(opt.dataset[350]);
+                luar = Number(opt.dataset[350]);
 
-            }else if(km.value>200){
+            }else if(Number(km.value)>200){
 
-                luar=Number(opt.dataset[200]);
+                luar = Number(opt.dataset[200]);
 
-            }else if(km.value>100){
+            }else if(Number(km.value)>100){
 
-                luar=Number(opt.dataset[100]);
+                luar = Number(opt.dataset[100]);
 
             }
 
         }
 
-        const total=harga+luar;
+        const total = harga + luar;
 
-        hargaInput.value=harga;
-        luarInput.value=luar;
-        totalInput.value=total;
+        hargaInput.value = harga;
+        luarInput.value = luar;
+        totalInput.value = total;
 
-        txtHarga.innerHTML=rupiah(harga);
-        txtLuar.innerHTML=rupiah(luar);
-        txtTotal.innerHTML=rupiah(total);
+        txtHarga.innerHTML = rupiah(harga);
+        txtLuar.innerHTML = rupiah(luar);
+        txtTotal.innerHTML = rupiah(total);
 
     }
 
     function validasi(){
 
-        const lengkap=
+        const lengkap =
 
             cekKtp.checked &&
             cekSim.checked &&
@@ -574,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if(lengkap){
 
-            btn.disabled=false;
+            btn.disabled = false;
 
             status.className="mt-5 rounded-xl bg-green-100 text-green-700 p-4";
 
@@ -582,7 +656,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }else{
 
-            btn.disabled=true;
+            btn.disabled = true;
 
             status.className="mt-5 rounded-xl bg-yellow-100 text-yellow-700 p-4";
 
@@ -592,10 +666,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     }
 
-    mobil.addEventListener('change',hitung);
-    paket.addEventListener('change',hitung);
+    mobil.addEventListener('change',function(){
+
+        hitungTanggal();
+        hitung();
+
+    });
+
+    paket.addEventListener('change',function(){
+
+        hitungTanggal();
+        hitung();
+
+    });
+
     perjalanan.addEventListener('change',hitung);
+
     km.addEventListener('input',hitung);
+
+    tanggalPinjam.addEventListener('change',function(){
+
+        hitungTanggal();
+        hitung();
+
+    });
+
+    tanggalKembali.addEventListener('change',hitung);
 
     cekKtp.addEventListener('change',validasi);
     cekSim.addEventListener('change',validasi);
@@ -603,6 +699,7 @@ document.addEventListener('DOMContentLoaded', function () {
     cekSlip.addEventListener('change',validasi);
     cekUsaha.addEventListener('change',validasi);
 
+    hitungTanggal();
     hitung();
     validasi();
 

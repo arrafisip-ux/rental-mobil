@@ -2,6 +2,7 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+    {{-- Mobil --}}
     <div>
 
         <label class="block mb-2 font-semibold dark:text-white">
@@ -10,6 +11,7 @@
 
         <select
             name="mobil_id"
+            id="mobil_id"
             required
             class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
@@ -34,6 +36,7 @@
 
     </div>
 
+    {{-- Tanggal --}}
     <div>
 
         <label class="block mb-2 font-semibold dark:text-white">
@@ -49,6 +52,7 @@
 
     </div>
 
+    {{-- Jenis --}}
     <div>
 
         <label class="block mb-2 font-semibold dark:text-white">
@@ -75,6 +79,7 @@
 
     </div>
 
+    {{-- Sparepart --}}
     <div>
 
         <label class="block mb-2 font-semibold dark:text-white">
@@ -89,6 +94,7 @@
 
     </div>
 
+    {{-- KM Saat Servis --}}
     <div>
 
         <label class="block mb-2 font-semibold dark:text-white">
@@ -97,13 +103,16 @@
 
         <input
             type="number"
+            id="km_servis"
             name="km_servis"
+            readonly
             required
             value="{{ old('km_servis',$perawatan->km_servis ?? '') }}"
-            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+            class="w-full bg-slate-100 rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
     </div>
 
+    {{-- KM Berikutnya --}}
     <div>
 
         <label class="block mb-2 font-semibold dark:text-white">
@@ -112,13 +121,16 @@
 
         <input
             type="number"
+            id="km_servis_berikutnya"
             name="km_servis_berikutnya"
+            readonly
             required
             value="{{ old('km_servis_berikutnya',$perawatan->km_servis_berikutnya ?? '') }}"
-            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
+            class="w-full bg-slate-100 rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
     </div>
 
+    {{-- Biaya --}}
     <div>
 
         <label class="block mb-2 font-semibold dark:text-white">
@@ -134,6 +146,7 @@
 
     </div>
 
+    {{-- Bengkel --}}
     <div>
 
         <label class="block mb-2 font-semibold dark:text-white">
@@ -181,3 +194,32 @@
     </a>
 
 </div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const mobil = document.getElementById('mobil_id');
+
+    function loadServisData() {
+
+        if (!mobil.value) return;
+
+        fetch('/mobil/' + mobil.value + '/servis-data')
+            .then(response => response.json())
+            .then(data => {
+
+                document.getElementById('km_servis').value = data.kilometer;
+                document.getElementById('km_servis_berikutnya').value = data.km_berikutnya;
+
+            });
+
+    }
+
+    mobil.addEventListener('change', loadServisData);
+
+    loadServisData();
+
+});
+
+</script>

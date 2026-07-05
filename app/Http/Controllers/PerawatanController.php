@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Mobil;
+use App\Models\Tarif;
 use App\Models\Perawatan;
 use Illuminate\Http\Request;
+use App\Models\RiwayatOli;
 
 class PerawatanController extends Controller
 {
@@ -49,6 +51,20 @@ class PerawatanController extends Controller
         'status_servis'          => 'Aman',
     ]);
 
+    dd($request->jenis_perawatan);
+
+    if ($request->jenis_perawatan == 'Ganti Oli') {
+
+    RiwayatOli::create([
+        'mobil_id'       => $request->mobil_id,
+        'tanggal_ganti'  => $request->tanggal_perawatan,
+        'km_ganti'       => $request->km_servis,
+        'km_berikutnya'  => $request->km_servis_berikutnya,
+        'keterangan'     => $request->nama_sparepart,
+    ]);
+
+}
+
     return redirect()
         ->route('perawatan.index')
         ->with('success', 'Data perawatan berhasil ditambahkan.');
@@ -88,6 +104,25 @@ class PerawatanController extends Controller
         'tanggal_servis_terakhir' => $request->tanggal_perawatan,
     ]);
 
+    if ($request->jenis_perawatan == 'Ganti Oli') {
+
+    RiwayatOli::updateOrCreate(
+
+        [
+            'mobil_id'      => $request->mobil_id,
+            'tanggal_ganti' => $request->tanggal_perawatan,
+        ],
+
+        [
+            'km_ganti'      => $request->km_servis,
+            'km_berikutnya' => $request->km_servis_berikutnya,
+            'keterangan'    => $request->nama_sparepart,
+        ]
+
+    );
+
+}
+
     return redirect()
         ->route('perawatan.index')
         ->with('success', 'Data perawatan berhasil diperbarui.');
@@ -102,4 +137,18 @@ class PerawatanController extends Controller
             'Data perawatan berhasil dihapus.'
         );
     }
+
+    public function servisData(Mobil $mobil)
+{
+    $tarif = Tarif::where('mobil_id', $mobil->id)->first();
+
+    $kmSaatServis = $mobil->kilometer;
+    $interval = $tarif?->interval_ganti_oli ?? 10000;
+
+    return response()->json([
+        'kilometer' => $kmSaatServis,
+        'interval' => $interval,
+        'km_berikutnya' => $kmSaatServis + $interval,
+    ]);
+}
 }

@@ -35,129 +35,187 @@ class PenyewaanController extends Controller
 }
 
     public function store(Request $request)
-    {
-        $request->validate([
+{
+    $request->validate([
 
-            'pelanggan_id' => 'required|exists:pelanggans,id',
+        'pelanggan_id' => 'required|exists:pelanggans,id',
 
-            'mobil_id' => 'required|exists:mobils,id',
+        'mobil_id' => 'required|exists:mobils,id',
 
-            'tanggal_pinjam' => 'required|date',
+        'tanggal_pinjam' => 'required|date',
 
-            'tanggal_kembali_rencana' => 'required|date',
+        'tanggal_kembali_rencana' => 'required|date',
 
-            'paket' => 'required',
+        'paket' => 'required',
 
-            'tujuan' => 'required',
+        'tujuan' => 'required',
 
-            'jenis_perjalanan' => 'required',
+        'jenis_perjalanan' => 'required',
 
-            'estimasi_km' => 'required|numeric',
+        'estimasi_km' => 'required|numeric',
 
-            'km_awal' => 'required|numeric',
+        'km_awal' => 'required|numeric',
 
-            'lama_sewa' => 'required|numeric',
+        'lama_sewa' => 'required|numeric',
 
-            'harga_sewa' => 'required|numeric',
+        'harga_sewa' => 'required|numeric',
 
-            'biaya_luar_kota' => 'required|numeric',
+        'biaya_luar_kota' => 'required|numeric',
 
-            'overtime' => 'nullable|numeric',
+        'overtime' => 'nullable|numeric',
 
-            'denda' => 'nullable|numeric',
+        'denda' => 'nullable|numeric',
 
-            'total_bayar' => 'required|numeric',
+        'total_bayar' => 'required|numeric',
 
-            'status_pembayaran' => 'required',
+        'status_pembayaran' => 'required',
 
-            'catatan' => 'nullable',
+        'catatan' => 'nullable',
 
-        ]);
+    ]);
 
-        // Validasi Dokumen
-        if (
-            !$request->boolean('cek_ktp') ||
-            !$request->boolean('cek_sim') ||
-            (
-                !$request->boolean('cek_id_karyawan') &&
-                !$request->boolean('cek_slip_gaji') &&
-                !$request->boolean('cek_tempat_usaha')
-            )
-        ) {
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDASI PELANGGAN
+    |--------------------------------------------------------------------------
+    */
 
-            return back()
-                ->withInput()
-                ->withErrors([
-                    'dokumen' => 'Minimal KTP + SIM + salah satu (ID Karyawan / Slip Gaji / Tempat Usaha) wajib dicentang.'
-                ]);
+    $masihSewa = Penyewaan::where('pelanggan_id', $request->pelanggan_id)
+        ->where('status', 'Berjalan')
+        ->exists();
 
-        }
+    if ($masihSewa) {
 
-        $data = [
-
-            'no_transaksi' => 'TRX-' . now()->format('YmdHis'),
-
-            'pelanggan_id' => $request->pelanggan_id,
-
-            'mobil_id' => $request->mobil_id,
-
-            'tanggal_pinjam' => $request->tanggal_pinjam,
-
-            'tanggal_kembali_rencana' => $request->tanggal_kembali_rencana,
-
-            'paket' => $request->paket,
-
-            'tujuan' => $request->tujuan,
-
-            'jenis_perjalanan' => $request->jenis_perjalanan,
-
-            'estimasi_km' => $request->estimasi_km,
-
-            'km_awal' => $request->km_awal,
-
-            'lama_sewa' => $request->lama_sewa,
-
-            'harga_sewa' => $request->harga_sewa,
-
-            'biaya_luar_kota' => $request->biaya_luar_kota,
-
-            'jam_overtime' => 0,
-
-            'overtime' => 0,
-
-            'denda' => 0,
-
-            'total_bayar' => $request->total_bayar,
-
-            'status_pembayaran' => $request->status_pembayaran,
-
-            'cek_ktp' => $request->boolean('cek_ktp'),
-
-            'cek_sim' => $request->boolean('cek_sim'),
-
-            'cek_id_karyawan' => $request->boolean('cek_id_karyawan'),
-
-            'cek_slip_gaji' => $request->boolean('cek_slip_gaji'),
-
-            'cek_tempat_usaha' => $request->boolean('cek_tempat_usaha'),
-
-            'status' => 'Berjalan',
-
-            'catatan' => $request->catatan,
-
-        ];
-
-        Penyewaan::create($data);
-
-        Mobil::where('id', $request->mobil_id)
-            ->update([
-                'status' => 'Dipakai'
+        return back()
+            ->withInput()
+            ->withErrors([
+                'pelanggan_id' =>
+                    'Pelanggan masih memiliki transaksi penyewaan yang belum selesai.'
             ]);
 
-        return redirect()
-            ->route('penyewaan.index')
-            ->with('success', 'Transaksi penyewaan berhasil dibuat.');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDASI MOBIL
+    |--------------------------------------------------------------------------
+    */
+
+    $mobil = Mobil::find($request->mobil_id);
+
+    if (!$mobil || $mobil->status != 'Ready') {
+
+        return back()
+            ->withInput()
+            ->withErrors([
+                'mobil_id' =>
+                    'Mobil sedang dipakai atau tidak tersedia.'
+            ]);
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDASI DOKUMEN
+    |--------------------------------------------------------------------------
+    */
+
+    if (
+        !$request->boolean('cek_ktp') ||
+        !$request->boolean('cek_sim') ||
+        (
+            !$request->boolean('cek_id_karyawan') &&
+            !$request->boolean('cek_slip_gaji') &&
+            !$request->boolean('cek_tempat_usaha')
+        )
+    ) {
+
+        return back()
+            ->withInput()
+            ->withErrors([
+                'dokumen' =>
+                    'Minimal KTP + SIM + salah satu (ID Karyawan / Slip Gaji / Tempat Usaha) wajib dicentang.'
+            ]);
+
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | SIMPAN TRANSAKSI
+    |--------------------------------------------------------------------------
+    */
+
+    Penyewaan::create([
+
+        'no_transaksi' => 'TRX-' . now()->format('YmdHis'),
+
+        'pelanggan_id' => $request->pelanggan_id,
+
+        'mobil_id' => $request->mobil_id,
+
+        'tanggal_pinjam' => $request->tanggal_pinjam,
+
+        'tanggal_kembali_rencana' => $request->tanggal_kembali_rencana,
+
+        'paket' => $request->paket,
+
+        'tujuan' => $request->tujuan,
+
+        'jenis_perjalanan' => $request->jenis_perjalanan,
+
+        'estimasi_km' => $request->estimasi_km,
+
+        'km_awal' => $request->km_awal,
+
+        'lama_sewa' => $request->lama_sewa,
+
+        'harga_sewa' => $request->harga_sewa,
+
+        'biaya_luar_kota' => $request->biaya_luar_kota,
+
+        'jam_overtime' => 0,
+
+        'overtime' => 0,
+
+        'denda' => 0,
+
+        'total_bayar' => $request->total_bayar,
+
+        'status_pembayaran' => $request->status_pembayaran,
+
+        'cek_ktp' => $request->boolean('cek_ktp'),
+
+        'cek_sim' => $request->boolean('cek_sim'),
+
+        'cek_id_karyawan' => $request->boolean('cek_id_karyawan'),
+
+        'cek_slip_gaji' => $request->boolean('cek_slip_gaji'),
+
+        'cek_tempat_usaha' => $request->boolean('cek_tempat_usaha'),
+
+        'status' => 'Berjalan',
+
+        'catatan' => $request->catatan,
+
+    ]);
+
+    /*
+    |--------------------------------------------------------------------------
+    | UPDATE STATUS MOBIL
+    |--------------------------------------------------------------------------
+    */
+
+    $mobil->update([
+        'status' => 'Dipakai'
+    ]);
+
+    return redirect()
+        ->route('penyewaan.index')
+        ->with(
+            'success',
+            'Transaksi penyewaan berhasil dibuat.'
+        );
+}
 
     public function edit(Penyewaan $penyewaan)
     {
@@ -178,53 +236,100 @@ class PenyewaanController extends Controller
     }
 
     public function update(Request $request, Penyewaan $penyewaan)
-    {
-        $request->validate([
+{
+    $request->validate([
 
-            'pelanggan_id' => 'required',
+        'pelanggan_id' => 'required|exists:pelanggans,id',
 
-            'mobil_id' => 'required',
+        'mobil_id' => 'required|exists:mobils,id',
 
-            'tanggal_pinjam' => 'required',
+        'tanggal_pinjam' => 'required|date',
 
-            'tanggal_kembali_rencana' => 'required',
+        'tanggal_kembali_rencana' => 'required|date',
 
-            'paket' => 'required',
+        'paket' => 'required',
 
-            'tujuan' => 'required',
+        'tujuan' => 'required',
 
-            'jenis_perjalanan' => 'required',
+        'jenis_perjalanan' => 'required',
 
-            'estimasi_km' => 'required',
+        'estimasi_km' => 'required|numeric',
 
-            'km_awal' => 'required',
+        'km_awal' => 'required|numeric',
 
-            'lama_sewa' => 'required',
+        'lama_sewa' => 'required|numeric',
 
-            'harga_sewa' => 'required',
+        'harga_sewa' => 'required|numeric',
 
-            'biaya_luar_kota' => 'required',
+        'biaya_luar_kota' => 'required|numeric',
 
-            'overtime' => 'required',
+        'overtime' => 'nullable|numeric',
 
-            'denda' => 'required',
+        'denda' => 'nullable|numeric',
 
-            'total_bayar' => 'required',
+        'total_bayar' => 'required|numeric',
 
-            'status_pembayaran' => 'required',
+        'status_pembayaran' => 'required',
 
-            'status' => 'required',
+        'status' => 'required',
 
-            'catatan' => 'nullable',
+        'catatan' => 'nullable',
 
-        ]);
+    ]);
 
-        $penyewaan->update($request->except('no_transaksi'));
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDASI PELANGGAN
+    |--------------------------------------------------------------------------
+    */
 
-        return redirect()
-            ->route('penyewaan.index')
-            ->with('success', 'Data penyewaan berhasil diperbarui.');
+    $masihSewa = Penyewaan::where('pelanggan_id', $request->pelanggan_id)
+        ->where('status', 'Berjalan')
+        ->where('id', '!=', $penyewaan->id)
+        ->exists();
+
+    if ($masihSewa) {
+
+        return back()
+            ->withInput()
+            ->withErrors([
+                'pelanggan_id' =>
+                    'Pelanggan masih memiliki transaksi penyewaan yang belum selesai.'
+            ]);
+
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | VALIDASI MOBIL
+    |--------------------------------------------------------------------------
+    */
+
+    $mobilDipakai = Penyewaan::where('mobil_id', $request->mobil_id)
+        ->where('status', 'Berjalan')
+        ->where('id', '!=', $penyewaan->id)
+        ->exists();
+
+    if ($mobilDipakai) {
+
+        return back()
+            ->withInput()
+            ->withErrors([
+                'mobil_id' =>
+                    'Mobil sedang dipakai oleh transaksi lain.'
+            ]);
+
+    }
+
+    $penyewaan->update($request->except('no_transaksi'));
+
+    return redirect()
+        ->route('penyewaan.index')
+        ->with(
+            'success',
+            'Data penyewaan berhasil diperbarui.'
+        );
+}
     public function pengembalian(Penyewaan $penyewaan)
 {
     $penyewaan->load(['pelanggan', 'mobil.tarif']);
@@ -237,7 +342,7 @@ class PenyewaanController extends Controller
 public function selesai(Request $request, Penyewaan $penyewaan)
 {
     $request->validate([
-        'km_akhir' => 'required|numeric|gte:km_awal',
+        'km_akhir' => 'required|numeric|min:'.$penyewaan->km_awal,
         'tanggal_kembali' => 'required|date',
         'jam_overtime' => 'nullable|numeric',
         'denda' => 'nullable|numeric',
@@ -257,9 +362,9 @@ public function selesai(Request $request, Penyewaan $penyewaan)
 
         'jam_overtime' => $request->jam_overtime,
 
-        'overtime' => $request->overtime,
-
-        'denda' => $request->denda,
+        'overtime' => (int) $request->overtime,
+'denda' => (int) $request->denda,
+'jam_overtime' => (int) $request->jam_overtime,
 
         'total_bayar' => $request->total_bayar,
 
