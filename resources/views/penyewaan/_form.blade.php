@@ -15,24 +15,30 @@
         </label>
 
         <select
-            name="pelanggan_id"
-            class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white"
-            required>
+    name="pelanggan_id"
+    class="w-full rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 dark:text-white px-4 py-3"
+    required>
 
-            <option value="">Pilih Pelanggan</option>
+    <option value="">Pilih Pelanggan</option>
 
-            @foreach($pelanggans as $pelanggan)
+    @foreach($pelanggans as $pelanggan)
 
-                <option value="{{ $pelanggan->id }}"
-                    {{ old('pelanggan_id',$penyewaan->pelanggan_id ?? '') == $pelanggan->id ? 'selected' : '' }}>
+        <option
+    value="{{ $pelanggan->id }}"
+    {{ $pelanggan->penyewaan_aktif ? 'disabled' : '' }}
+    {{ old('pelanggan_id') == $pelanggan->id ? 'selected' : '' }}
+>
+    {{ $pelanggan->nama }}
 
-                    {{ $pelanggan->nama }}
+    @if($pelanggan->penyewaan_aktif)
+        (Sedang Menyewa)
+    @endif
 
-                </option>
+</option>
 
-            @endforeach
+    @endforeach
 
-        </select>
+</select>
     </div>
 
     {{-- Mobil --}}
@@ -101,13 +107,14 @@
             name="paket"
             class="w-full rounded-xl border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-white">
 
-            <option>6 Jam</option>
+             <option value="6 Jam">6 Jam</option>
 
-            <option>12 Jam</option>
+    <option value="12 Jam">12 Jam</option>
 
-            <option>24 Jam</option>
+    <option value="24 Jam">24 Jam</option>
 
-            <option>Harian</option>
+    <option value="Harian">Harian</option>
+
 
         </select>
 
@@ -536,8 +543,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         case "Harian":
 
-            tanggalKembali.disabled = false;
-            return;
+    tanggalKembali.disabled = false;
+
+    if(tanggalKembali.value==""){
+
+        tanggalKembali.value=tanggalPinjam.value;
+
+    }
+
+    break;
 
     }
 
@@ -622,7 +636,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
 
-        const total = harga + luar;
+        const total = Number(harga) + Number(luar);
 
         hargaInput.value = harga;
         luarInput.value = luar;
@@ -691,7 +705,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
-    tanggalKembali.addEventListener('change',hitung);
+    tanggalKembali.addEventListener('change',function(){
+
+    hitungTanggal();
+
+    hitung();
+
+});
 
     cekKtp.addEventListener('change',validasi);
     cekSim.addEventListener('change',validasi);

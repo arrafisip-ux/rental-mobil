@@ -21,7 +21,11 @@ class PenyewaanController extends Controller
 
     public function create()
 {
-    $pelanggans = Pelanggan::orderBy('nama')->get();
+    $pelanggans = Pelanggan::withCount([
+    'penyewaans as penyewaan_aktif' => function ($q) {
+        $q->where('status', 'Berjalan');
+    }
+])->orderBy('nama')->get();
 
     $mobils = Mobil::with('tarif')
         ->where('status', 'Ready')
@@ -73,6 +77,8 @@ class PenyewaanController extends Controller
         'catatan' => 'nullable',
 
     ]);
+    
+
 
     /*
     |--------------------------------------------------------------------------
@@ -103,16 +109,15 @@ class PenyewaanController extends Controller
 
     $mobil = Mobil::find($request->mobil_id);
 
-    if (!$mobil || $mobil->status != 'Ready') {
+if (!$mobil || $mobil->status != 'Ready') {
 
-        return back()
-            ->withInput()
-            ->withErrors([
-                'mobil_id' =>
-                    'Mobil sedang dipakai atau tidak tersedia.'
-            ]);
+    return back()
+        ->withInput()
+        ->withErrors([
+            'mobil_id' => 'Mobil sedang digunakan.'
+        ]);
 
-    }
+}
 
     /*
     |--------------------------------------------------------------------------

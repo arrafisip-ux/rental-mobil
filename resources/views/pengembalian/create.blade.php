@@ -191,11 +191,11 @@
             </label>
 
             <input
-                type="number"
-                id="jam_overtime"
-                name="jam_overtime"
-                value="0"
-                class="w-full rounded-xl">
+    type="number"
+    id="jam_overtime"
+    name="jam_overtime"
+    readonly
+    class="w-full rounded-xl bg-slate-100 dark:bg-slate-700">
         </div>
 
         <div>
@@ -218,11 +218,11 @@
             </label>
 
             <input
-                type="number"
-                id="denda"
-                name="denda"
-                value="0"
-                class="w-full rounded-xl">
+    type="number"
+    id="denda"
+    name="denda"
+    readonly
+    class="w-full rounded-xl bg-slate-100 dark:bg-slate-700">
         </div>
 
     </div>
@@ -282,53 +282,98 @@
 
 <script>
 
-const kmAwal=document.getElementById('km_awal');
-const kmAkhir=document.getElementById('km_akhir');
+const kmAwal = document.getElementById('km_awal');
+const kmAkhir = document.getElementById('km_akhir');
 
-const totalKm=document.getElementById('total_km');
+const totalKm = document.getElementById('total_km');
 
-const jamOvertime=document.getElementById('jam_overtime');
+const jamOvertime = document.getElementById('jam_overtime');
 
-const overtime=document.getElementById('overtime');
+const overtime = document.getElementById('overtime');
 
-const denda=document.getElementById('denda');
+const denda = document.getElementById('denda');
 
-const grand=document.getElementById('grand_total');
+const grand = document.getElementById('grand_total');
 
-const total=document.getElementById('total_bayar');
+const totalBayar = document.getElementById('total_bayar');
 
-const biayaAwal={{ $penyewaan->total_bayar }};
+const tanggalKembali = document.querySelector('[name=tanggal_kembali]');
 
-const tarifOT={{ $penyewaan->mobil->tarif->overtime_per_jam ?? 0 }};
+const biayaAwal = {{ $penyewaan->total_bayar }};
+
+const tarifOT = {{ $penyewaan->mobil->tarif->overtime_per_jam ?? 0 }};
+
+const dendaPerHari = {{ $penyewaan->mobil->tarif->denda_per_hari ?? 0 }};
+
+const rencana = new Date("{{ $penyewaan->tanggal_kembali_rencana }}");
 
 function hitung(){
 
-    let km=(parseInt(kmAkhir.value||0)-parseInt(kmAwal.value||0));
+    // TOTAL KM
+    let km = parseInt(kmAkhir.value || 0) - parseInt(kmAwal.value || 0);
 
-    if(km<0) km=0;
+    if(km < 0){
+        km = 0;
+    }
 
-    totalKm.value=km;
+    totalKm.value = km;
 
-    let ot=(parseInt(jamOvertime.value||0)*tarifOT);
+    // BELUM PILIH TANGGAL
+    if(!tanggalKembali.value){
 
-    overtime.value=ot;
+        overtime.value = 0;
+        jamOvertime.value = 0;
+        denda.value = 0;
 
-    let totalBayar=biayaAwal+ot+parseInt(denda.value||0);
+        totalBayar.value = biayaAwal;
 
-    total.value=totalBayar;
+        grand.innerHTML = "Rp" + Number(biayaAwal).toLocaleString('id-ID');
 
-    grand.innerHTML='Rp'+Number(totalBayar).toLocaleString('id-ID');
+        return;
+
+    }
+
+    const kembali = new Date(tanggalKembali.value);
+
+    let selisihJam = 0;
+
+    if(kembali > rencana){
+
+        selisihJam = Math.ceil(
+            (kembali - rencana) / (1000*60*60)
+        );
+
+    }
+
+    jamOvertime.value = selisihJam;
+
+    let biayaOT = selisihJam * tarifOT;
+
+    overtime.value = biayaOT;
+
+    // Denda Harian
+    let telatHari = Math.floor(selisihJam / 24);
+
+    let biayaDenda = telatHari * dendaPerHari;
+
+    denda.value = biayaDenda;
+
+    // TOTAL
+    let grandTotal =
+        Number(biayaAwal) +
+        Number(biayaOT) +
+        Number(biayaDenda);
+
+    totalBayar.value = grandTotal;
+
+    grand.innerHTML =
+        "Rp" + grandTotal.toLocaleString('id-ID');
 
 }
 
-kmAkhir.addEventListener('keyup',hitung);
-kmAkhir.addEventListener('change',hitung);
+kmAkhir.addEventListener('input', hitung);
 
-jamOvertime.addEventListener('keyup',hitung);
-jamOvertime.addEventListener('change',hitung);
-
-denda.addEventListener('keyup',hitung);
-denda.addEventListener('change',hitung);
+tanggalKembali.addEventListener('change', hitung);
 
 hitung();
 
