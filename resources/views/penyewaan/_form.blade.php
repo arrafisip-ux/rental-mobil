@@ -511,60 +511,82 @@ document.addEventListener('DOMContentLoaded', function () {
         return "Rp" + Number(angka).toLocaleString('id-ID');
     }
 
+    function formatDatetime(date){
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth()+1).padStart(2,'0');
+        const dd = String(date.getDate()).padStart(2,'0');
+        const hh = String(date.getHours()).padStart(2,'0');
+        const ii = String(date.getMinutes()).padStart(2,'0');
+
+        return `${yyyy}-${mm}-${dd}T${hh}:${ii}`;
+    }
+
     function hitungTanggal(){
 
-    if(!tanggalPinjam.value) return;
+        if(!tanggalPinjam.value) return;
 
-    const mulai = new Date(tanggalPinjam.value);
-    let kembali = new Date(mulai);
+        const mulai = new Date(tanggalPinjam.value);
+        let kembali = new Date(mulai);
 
-    switch(paket.value){
+        switch(paket.value){
 
-        case "6 Jam":
+            case "6 Jam":
 
-            kembali.setHours(kembali.getHours()+6);
-            tanggalKembali.disabled = true;
-            lamaSewa.value = 1;
-            break;
+                kembali.setHours(kembali.getHours()+6);
 
-        case "12 Jam":
+                tanggalKembali.readOnly = true;
+                tanggalKembali.value = formatDatetime(kembali);
 
-            kembali.setHours(kembali.getHours()+12);
-            tanggalKembali.disabled = true;
-            lamaSewa.value = 1;
-            break;
+                lamaSewa.value = 1;
 
-        case "24 Jam":
+                break;
 
-            kembali.setDate(kembali.getDate()+1);
-            tanggalKembali.disabled = true;
-            lamaSewa.value = 1;
-            break;
+            case "12 Jam":
 
-        case "Harian":
+                kembali.setHours(kembali.getHours()+12);
 
-    tanggalKembali.disabled = false;
+                tanggalKembali.readOnly = true;
+                tanggalKembali.value = formatDatetime(kembali);
 
-    if(tanggalKembali.value==""){
+                lamaSewa.value = 1;
 
-        tanggalKembali.value=tanggalPinjam.value;
+                break;
 
+            case "24 Jam":
+
+                kembali.setDate(kembali.getDate()+1);
+
+                tanggalKembali.readOnly = true;
+                tanggalKembali.value = formatDatetime(kembali);
+
+                lamaSewa.value = 1;
+
+                break;
+
+            case "Harian":
+
+                tanggalKembali.readOnly = false;
+
+                if(!tanggalKembali.value){
+
+                    kembali.setDate(kembali.getDate()+1);
+                    tanggalKembali.value = formatDatetime(kembali);
+
+                }
+
+                let hari = Math.ceil(
+                    (new Date(tanggalKembali.value)-mulai)/(1000*60*60*24)
+                );
+
+                if(hari < 1){
+                    hari = 1;
+                }
+
+                lamaSewa.value = hari;
+
+                break;
+        }
     }
-
-    break;
-
-    }
-
-    const yyyy = kembali.getFullYear();
-    const mm = String(kembali.getMonth()+1).padStart(2,'0');
-    const dd = String(kembali.getDate()).padStart(2,'0');
-    const hh = String(kembali.getHours()).padStart(2,'0');
-    const ii = String(kembali.getMinutes()).padStart(2,'0');
-
-    tanggalKembali.value =
-        `${yyyy}-${mm}-${dd}T${hh}:${ii}`;
-
-}
 
     function hitung(){
 
@@ -592,28 +614,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 harga = Number(opt.dataset[24]);
                 break;
 
-           default:
+            case "Harian":
 
-    let hari = 1;
+                let hari = Math.ceil(
+                    (new Date(tanggalKembali.value)-new Date(tanggalPinjam.value))
+                    /(1000*60*60*24)
+                );
 
-    if(tanggalPinjam.value && tanggalKembali.value){
+                if(hari < 1){
+                    hari = 1;
+                }
 
-        const awal = new Date(tanggalPinjam.value);
-        const akhir = new Date(tanggalKembali.value);
+                lamaSewa.value = hari;
 
-        hari = Math.ceil(
-            (akhir-awal)/(1000*60*60*24)
-        );
+                harga = Number(opt.dataset[24]) * hari;
 
-        if(hari < 1){
-            hari = 1;
-        }
-
-    }
-
-    lamaSewa.value = hari;
-
-    harga = Number(opt.dataset[24]) * hari;
+                break;
         }
 
         let luar = 0;
@@ -636,7 +652,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         }
 
-        const total = Number(harga) + Number(luar);
+        const total = harga + luar;
 
         hargaInput.value = harga;
         luarInput.value = luar;
@@ -651,7 +667,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function validasi(){
 
         const lengkap =
-
             cekKtp.checked &&
             cekSim.checked &&
             (
@@ -664,17 +679,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
             btn.disabled = false;
 
-            status.className="mt-5 rounded-xl bg-green-100 text-green-700 p-4";
+            status.className =
+                "mt-5 rounded-xl bg-green-100 text-green-700 p-4";
 
-            status.innerHTML="✔ Persyaratan dokumen sudah lengkap.";
+            status.innerHTML =
+                "✔ Persyaratan dokumen sudah lengkap.";
 
         }else{
 
             btn.disabled = true;
 
-            status.className="mt-5 rounded-xl bg-yellow-100 text-yellow-700 p-4";
+            status.className =
+                "mt-5 rounded-xl bg-yellow-100 text-yellow-700 p-4";
 
-            status.innerHTML="Lengkapi KTP + SIM + salah satu ID Karyawan / Slip Gaji / Tempat Usaha.";
+            status.innerHTML =
+                "Lengkapi KTP + SIM + salah satu ID Karyawan / Slip Gaji / Tempat Usaha.";
 
         }
 
@@ -700,18 +719,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     tanggalPinjam.addEventListener('change',function(){
 
-        hitungTanggal();
+        if(paket.value!="Harian"){
+            hitungTanggal();
+        }
+
         hitung();
 
     });
 
     tanggalKembali.addEventListener('change',function(){
 
-    hitungTanggal();
+        if(paket.value=="Harian"){
+            hitung();
+        }
 
-    hitung();
-
-});
+    });
 
     cekKtp.addEventListener('change',validasi);
     cekSim.addEventListener('change',validasi);

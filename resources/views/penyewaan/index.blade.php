@@ -138,52 +138,114 @@
                 @endif
 
             </td>
+<td class="p-4">
+    <div class="flex justify-center items-center gap-2">
 
-            <td class="p-4">
+       @if($item->status == 'Berjalan')
 
-                <div class="flex flex-wrap justify-center gap-2">
+    <a href="{{ route('penyewaan.pengembalian', $item) }}"
+       class="bg-blue-600 hover:bg-blue-700
+              text-white text-sm
+              px-3 py-2 rounded-lg transition">
 
-                    @if($item->status=='Berjalan')
+        Kembalikan
 
-                    <a
-                        href="{{ route('penyewaan.pengembalian',$item) }}"
-                        class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg">
+    </a>
 
-                        Pengembalian
+    <a href="{{ route('penyewaan.edit', $item) }}"
+       class="bg-yellow-500 hover:bg-yellow-600
+              text-white text-sm
+              px-3 py-2 rounded-lg transition">
 
-                    </a>
+        Edit
 
-                    @endif
+    </a>
 
-                    <a
-                        href="{{ route('penyewaan.edit',$item) }}"
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+    <form action="{{ route('penyewaan.destroy',$item) }}"
+          method="POST"
+          class="inline">
 
-                        Edit
+        @csrf
+        @method('DELETE')
 
-                    </a>
+        <button
+            onclick="return confirm('Hapus transaksi ini?')"
+            class="bg-red-600 hover:bg-red-700
+                   text-white text-sm
+                   px-3 py-2 rounded-lg transition">
 
-                    <form
-                        action="{{ route('penyewaan.destroy',$item) }}"
-                        method="POST">
+            Hapus
 
-                        @csrf
-                        @method('DELETE')
+        </button>
 
-                        <button
-                            onclick="return confirm('Hapus transaksi ini?')"
-                            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+    </form>
 
-                            Hapus
+        @elseif($item->status == 'Booking')
 
-                        </button>
+            <a href="{{ route('penyewaan.edit', $item) }}"
+               class="bg-yellow-500 hover:bg-yellow-600
+                      text-white text-sm
+                      px-3 py-2 rounded-lg transition">
 
-                    </form>
+                Edit
 
-                </div>
+            </a>
 
-            </td>
+            <form action="{{ route('penyewaan.destroy',$item) }}"
+                  method="POST"
+                  class="inline">
 
+                @csrf
+                @method('DELETE')
+
+                <button
+                    onclick="return confirm('Hapus transaksi ini?')"
+                    class="bg-red-600 hover:bg-red-700
+                           text-white text-sm
+                           px-3 py-2 rounded-lg transition">
+
+                    Hapus
+
+                </button>
+
+            </form>
+
+        @elseif($item->status == 'Selesai')
+
+            <span
+                class="inline-flex items-center
+                       bg-green-100 text-green-700
+                       px-3 py-2 rounded-lg text-sm">
+
+                ✓ Selesai
+
+            </span>
+
+        @else
+
+            <form action="{{ route('penyewaan.destroy',$item) }}"
+                  method="POST"
+                  class="inline">
+
+                @csrf
+                @method('DELETE')
+
+                <button
+                    onclick="return confirm('Hapus transaksi ini?')"
+                    class="bg-red-600 hover:bg-red-700
+                           text-white text-sm
+                           px-3 py-2 rounded-lg transition">
+
+                    Hapus
+
+                </button>
+
+            </form>
+
+        @endif
+
+    </div>
+</td>
         </tr>
 
         @empty

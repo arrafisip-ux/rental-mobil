@@ -79,19 +79,40 @@
 
                 <td class="p-4">
 
-                    {{ $item->tanggal_cek }}
+                    {{ \Carbon\Carbon::parse($item->tanggal)->format('d-m-Y H:i') }}
 
                 </td>
 
                 <td class="p-4">
 
-                    {{ $item->petugas }}
+                    Administrator
 
                 </td>
 
                 <td class="p-4">
 
-                    {{ Str::limit($item->kondisi,40) }}
+                    @if(
+$item->cek_body &&
+$item->cek_ban &&
+$item->cek_lampu &&
+$item->cek_rem &&
+$item->cek_oli &&
+$item->cek_air_radiator &&
+$item->cek_bensin &&
+$item->cek_interior
+)
+
+<span class="px-3 py-1 bg-green-100 text-green-700 rounded-full">
+Baik
+</span>
+
+@else
+
+<span class="px-3 py-1 bg-red-100 text-red-700 rounded-full">
+Perlu Perbaikan
+</span>
+
+@endif
 
                 </td>
 
